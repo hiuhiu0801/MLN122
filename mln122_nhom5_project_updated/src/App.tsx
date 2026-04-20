@@ -186,10 +186,10 @@ export default function App() {
   const [isAuthSubmitting, setIsAuthSubmitting] = useState(false);
   const [newDisplayName, setNewDisplayName] = useState("");
   const [newPhotoURL, setNewPhotoURL] = useState("");
-  
+
   // State quản lý việc mở rộng/thu gọn nội dung của phần Supplement
   const [expandedSupplement, setExpandedSupplement] = useState<string | null>("supp-1");
-  
+
   // State quản lý việc mở rộng/thu gọn nội dung dài của Tab (Nội dung trọng tâm)
   const [expandedTopics, setExpandedTopics] = useState<Record<string, boolean>>({});
   const toggleExpandTopic = (id: string) => {
@@ -679,7 +679,7 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
                   Chương 5 - Nhóm 5
                 </Badge>
 
-                <h1 className="text-5xl md:text-7xl lg:text-8xl mb-8 leading-[0.9] tracking-tight font-serif italic text-white drop-shadow-lg">
+                <h1 className="text-5xl md:text-7xl lg:text-8xl mb-8 leading-[0.9] tracking-tight font-serif not-italic text-white drop-shadow-lg">
                   Kinh tế thị trường <br className="hidden md:block" />
                   <span className="text-white not-italic">Định hướng XHCN</span>
                 </h1>
@@ -768,8 +768,8 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
                     {STRUCTURE_ITEMS.map((item, index) => (
                       <div key={item.id} className="flex flex-col p-4 bg-white dark:bg-zinc-800 rounded-2xl shadow-sm">
                         <div className="flex items-center justify-between mb-2">
-                           <span className="font-medium">{index + 1}. {item.title}</span>
-                           <Badge variant="secondary" className="rounded-full">{item.id === "khai-niem" ? "Cốt lõi" : "Trọng tâm"}</Badge>
+                          <span className="font-medium">{index + 1}. {item.title}</span>
+                          <Badge variant="secondary" className="rounded-full">{item.id === "khai-niem" ? "Cốt lõi" : "Trọng tâm"}</Badge>
                         </div>
                         <p className="text-sm text-muted-foreground">{item.desc}</p>
                       </div>
@@ -989,7 +989,16 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
         </section>
 
         {/* Flipbook Section */}
-        <section id="flipbook" className="py-32 bg-gradient-to-b from-background via-secondary/10 to-background dark:from-zinc-950 dark:via-zinc-900/50 dark:to-zinc-950 relative overflow-hidden">
+        {/* Flipbook Section */}
+        <section
+          id="flipbook"
+          className="py-32 relative z-10 bg-fixed bg-center bg-cover"
+          style={{ backgroundImage: 'url("/images/Section5.png")' }}
+        >
+          {/* Lớp phủ mờ giúp dễ đọc chữ */}
+          <div className="absolute inset-0 bg-secondary/80 dark:bg-zinc-950/90 backdrop-blur-md -z-10" />
+
+          <div className="container mx-auto px-4 md:px-6 relative z-10"></div>
           <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.10),transparent_40%)]" />
           <div className="container mx-auto px-4 md:px-6">
             <div className="max-w-5xl mx-auto">
@@ -1030,7 +1039,7 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
             </nav>
             <Separator className="max-w-xs mx-auto mb-12 opacity-50" />
             <p className="text-sm text-muted-foreground font-light italic max-w-2xl">
-               Nội dung trình bày tập trung đúng phạm vi Nhóm 5: khái niệm, tính tất yếu khách quan và đặc trưng của kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.
+              Nội dung trình bày tập trung đúng phạm vi Nhóm 5: khái niệm, tính tất yếu khách quan và đặc trưng của kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.
             </p>
           </div>
         </div>
