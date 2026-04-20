@@ -32,7 +32,6 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -189,6 +188,7 @@ export default function App() {
   const [newPhotoURL, setNewPhotoURL] = useState("");
   const [expandedSupplement, setExpandedSupplement] = useState<string | null>("supp-1");
   const [activeTopic, setActiveTopic] = useState("topic-1");
+  const [isTopicDialogOpen, setIsTopicDialogOpen] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -596,6 +596,13 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
     },
   ];
 
+  const activeTopicData = topics.find((topic) => topic.id === activeTopic) ?? topics[0];
+
+  const openTopicDialog = (topicId: string) => {
+    setActiveTopic(topicId);
+    setIsTopicDialogOpen(true);
+  };
+
   const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 
   useEffect(() => {
@@ -757,7 +764,7 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
                     Xem nội dung chính <ArrowRight className="ml-2 w-4 h-4" />
                   </a>
                   <Button variant="outline" size="lg" className="rounded-full px-8" onClick={() => setIsChatOpen(true)}>
-                    AI Chương 5
+                    AI Triết Học
                   </Button>
                 </div>
               </div>
@@ -852,84 +859,140 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
           </div>
         </section>
 
-        <section id="topics" className="py-14 md:py-16 bg-[linear-gradient(180deg,rgba(247,246,244,0.9),rgba(242,239,235,0.75))] dark:bg-[linear-gradient(180deg,rgba(24,24,27,1),rgba(20,20,23,1))]">
+        <section id="topics" className="py-14 md:py-16 bg-[linear-gradient(180deg,rgba(247,246,244,0.88),rgba(242,239,235,0.7))] dark:bg-[linear-gradient(180deg,rgba(24,24,27,1),rgba(20,20,23,1))]">
           <div className="container mx-auto px-4 md:px-6">
-            <div className="max-w-6xl mx-auto text-center mb-10 md:mb-12">
-              <h2 className="text-4xl md:text-5xl font-serif italic mb-4">Nội dung trọng tâm</h2>
-              <div className="w-20 h-1 bg-primary rounded-full mx-auto mb-4" />
-              <p className="max-w-3xl mx-auto text-muted-foreground text-lg leading-8">
-                Ba khối nội dung dưới đây được trình bày đúng phạm vi phần thuyết trình của Nhóm 5: khái niệm, tính tất yếu khách quan và đặc trưng của mô hình kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.
-              </p>
-            </div>
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-8 md:mb-10 px-2">
+                <Badge className="mb-4 rounded-full bg-primary/10 px-4 py-1.5 text-primary hover:bg-primary/10 border-none">Nhóm 5</Badge>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif italic tracking-tight mb-3">Nội dung trọng tâm</h2>
+                <div className="w-16 h-1 bg-primary rounded-full mx-auto mb-4" />
+                <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-muted-foreground leading-7 md:leading-8">
+                  Nội dung trọng tâm và chi tiết về từng phần, bấm xem bảng chi tiết để không bỏ lỡ nội dung.
+                </p>
+              </div>
 
-            <Tabs value={activeTopic} onValueChange={setActiveTopic} className="w-full max-w-6xl mx-auto">
-              <TabsList className="grid grid-cols-3 h-auto max-w-[680px] mx-auto p-2 gap-2 bg-white/80 dark:bg-zinc-900/80 rounded-2xl border border-primary/10 mb-6 md:mb-8">
-                {topics.map((topic) => (
-                  <TabsTrigger key={topic.id} value={topic.id} className="rounded-xl py-3 data-[state=active]:shadow-lg data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800">
-                    {topic.shortTitle}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-
-              {topics.map((topic) => (
-                <TabsContent key={topic.id} value={topic.id} className="mt-0" id={topic.id === "topic-1" ? "khai-niem" : topic.id === "topic-2" ? "tinh-tat-yeu" : "dac-trung"}>
-                  <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="grid lg:grid-cols-[0.95fr_1.05fr] gap-6">
-                    <div className="rounded-[2rem] border border-primary/10 bg-white dark:bg-zinc-950 shadow-xl shadow-primary/5 p-6 md:p-8 flex flex-col gap-6">
-                      <div className="w-14 h-14 rounded-3xl bg-primary/10 flex items-center justify-center">{topic.icon}</div>
-                      <div>
-                        <h3 className="text-3xl md:text-5xl font-serif leading-tight mb-4">{topic.title}</h3>
-                        <p className="text-lg text-accent italic leading-8">{topic.subtitle}</p>
-                      </div>
-                      <div className="rounded-2xl border border-primary/10 bg-primary/[0.03] p-5">
-                        <p className="font-semibold mb-2">Tóm tắt nhanh</p>
-                        <p className="text-muted-foreground leading-7">{topic.summary}</p>
-                      </div>
-                      <div className="grid sm:grid-cols-1 gap-3">
-                        {topic.highlights.map((item, idx) => (
-                          <div key={idx} className="rounded-2xl border border-primary/10 px-4 py-4 bg-background/80">
-                            <p className="text-sm leading-6">{item}</p>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="rounded-[1.75rem] border border-dashed border-primary/20 bg-secondary/30 p-4 md:p-5">
-                        {topic.imageUrl ? (
-                          <div className="space-y-4">
-                            <img src={topic.imageUrl} alt={topic.title} className="h-56 w-full rounded-[1.25rem] object-cover" referrerPolicy="no-referrer" />
-                            <Button variant="outline" className="rounded-full" onClick={() => handleGenerateImage(topic.id)} disabled={isGeneratingImage[topic.id]}>
-                              {isGeneratingImage[topic.id] ? "Đang tạo..." : "Tạo lại ảnh AI"}
-                            </Button>
-                          </div>
-                        ) : (
-                          <div className="text-center py-6 space-y-4">
-                            <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
-                              <Sparkles className="w-6 h-6 text-primary/60" />
-                            </div>
-                            <div>
-                              <p className="font-medium mb-1">Hình minh họa AI cho chủ đề này</p>
-                              <p className="text-sm text-muted-foreground">Bạn có thể tạo ngay ảnh minh họa để làm slide hoặc làm nổi bật phần nội dung đang học.</p>
-                            </div>
-                            <Button variant="outline" className="rounded-full" onClick={() => handleGenerateImage(topic.id)} disabled={isGeneratingImage[topic.id]}>
-                              {isGeneratingImage[topic.id] ? "Đang tạo..." : "Tạo ảnh minh họa AI"}
-                            </Button>
-                          </div>
+              <div className="grid gap-4 lg:grid-cols-[0.92fr_1.08fr] items-start">
+                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+                  {topics.map((topic, index) => {
+                    const isActive = activeTopic === topic.id;
+                    return (
+                      <div
+                        key={topic.id}
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => setActiveTopic(topic.id)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setActiveTopic(topic.id);
+                          }
+                        }}
+                        className={cn(
+                          "group text-left rounded-[1.75rem] border p-5 md:p-6 bg-white/95 dark:bg-zinc-950 shadow-sm transition-all duration-200",
+                          isActive
+                            ? "border-primary/30 shadow-xl shadow-primary/5 ring-1 ring-primary/10"
+                            : "border-primary/10 hover:border-primary/25 hover:-translate-y-0.5"
                         )}
-                      </div>
-                    </div>
+                      >
+                        <div className="flex items-start justify-between gap-4 mb-4">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
+                              {topic.icon}
+                            </div>
+                            <div className="min-w-0">
+                              <p className="text-[11px] uppercase tracking-[0.18em] text-primary/80 font-semibold mb-1">Mục {index + 1}</p>
+                              <h3 className="text-lg md:text-xl font-semibold leading-6 text-foreground">{topic.shortTitle}</h3>
+                            </div>
+                          </div>
+                          <ChevronRight className={cn("w-5 h-5 shrink-0 text-primary/60 transition-transform", isActive && "translate-x-1")} />
+                        </div>
 
-                    <div className="rounded-[2rem] border border-primary/10 bg-white dark:bg-zinc-950 shadow-xl shadow-primary/5 p-6 md:p-8">
-                      <div className="prose prose-slate dark:prose-invert max-w-none text-base md:text-lg leading-8">
-                        <ReactMarkdown>{topic.content}</ReactMarkdown>
+                        <p className="text-sm md:text-[15px] leading-6 text-muted-foreground mb-4 line-clamp-3">{topic.summary}</p>
+
+                        <div className="grid gap-2.5">
+                          {topic.highlights.slice(0, 2).map((item, idx) => (
+                            <div key={idx} className="rounded-2xl bg-primary/[0.04] border border-primary/10 px-3.5 py-3 text-sm leading-6 text-foreground/90">
+                              {item}
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="mt-4 flex flex-wrap items-center gap-2.5">
+                          <Button
+                            type="button"
+                            size="sm"
+                            className="rounded-full px-4"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              openTopicDialog(topic.id);
+                            }}
+                          >
+                            Xem bảng chi tiết
+                          </Button>
+                        </div>
                       </div>
-                      <Separator className="my-6" />
-                      <div className="rounded-[1.75rem] border border-accent/15 bg-accent/5 p-6">
-                        <p className="text-sm uppercase tracking-[0.18em] text-accent font-semibold mb-3">Ví dụ</p>
-                        <p className="italic text-lg leading-8 text-foreground/90">{topic.example}</p>
-                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="rounded-[2rem] border border-primary/10 bg-white/95 dark:bg-zinc-950 shadow-xl shadow-primary/5 p-5 sm:p-6 md:p-7 sticky top-20">
+                  <div className="flex flex-wrap items-center gap-3 mb-5">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
+                      {activeTopicData.icon}
                     </div>
-                  </motion.div>
-                </TabsContent>
-              ))}
-            </Tabs>
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.18em] text-primary font-semibold mb-1">Đang chọn</p>
+                      <h3 className="text-xl sm:text-2xl md:text-[1.75rem] font-serif leading-tight">{activeTopicData.title}</h3>
+                    </div>
+                  </div>
+
+                  <p className="text-sm sm:text-base text-accent italic leading-7 mb-5">{activeTopicData.subtitle}</p>
+
+                  <div className="grid gap-3 sm:grid-cols-3 mb-5">
+                    {activeTopicData.highlights.map((item, idx) => (
+                      <div key={idx} className="rounded-2xl border border-primary/10 bg-primary/[0.03] px-4 py-3.5 text-sm leading-6">
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="rounded-[1.5rem] border border-primary/10 bg-secondary/20 dark:bg-zinc-900/70 p-4 sm:p-5 mb-5">
+                    <p className="text-sm font-semibold mb-2">Tóm tắt nhanh</p>
+                    <p className="text-sm sm:text-base text-muted-foreground leading-7">{activeTopicData.summary}</p>
+                  </div>
+
+                  <div className="rounded-[1.5rem] border border-accent/15 bg-accent/5 p-4 sm:p-5">
+                    <p className="text-xs uppercase tracking-[0.18em] text-accent font-semibold mb-2">Ví dụ ngắn</p>
+                    <p className="text-sm sm:text-base leading-7 text-foreground/90">{activeTopicData.example}</p>
+                  </div>
+
+                  <div className="mt-5 flex flex-col sm:flex-row gap-3">
+                    <Button className="rounded-full px-5" onClick={() => openTopicDialog(activeTopicData.id)}>
+                      Mở bảng nội dung
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="rounded-full px-5"
+                      onClick={() => handleGenerateImage(activeTopicData.id)}
+                      disabled={isGeneratingImage[activeTopicData.id]}
+                    >
+                      {isGeneratingImage[activeTopicData.id] ? "Đang tạo ảnh..." : activeTopicData.imageUrl ? "Tạo lại ảnh AI" : "Tạo ảnh minh họa AI"}
+                    </Button>
+                  </div>
+
+                  {activeTopicData.imageUrl && (
+                    <div className="mt-5 overflow-hidden rounded-[1.5rem] border border-primary/10">
+                      <img
+                        src={activeTopicData.imageUrl}
+                        alt={activeTopicData.title}
+                        className="h-52 sm:h-60 w-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -1030,7 +1093,7 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
               <a href="#topics" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Nội dung chính</a>
               <a href="#supplement" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Mở rộng</a>
               <a href="#flipbook" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Flipbook</a>
-              <button onClick={() => setIsChatOpen(true)} className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">AI Chương 5</button>
+              <button onClick={() => setIsChatOpen(true)} className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">AI Triết Học</button>
             </nav>
             <p className="text-sm text-muted-foreground leading-6 max-w-2xl">
               Nội dung trình bày tập trung đúng phạm vi Nhóm 5: khái niệm, tính tất yếu khách quan và đặc trưng của kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.
@@ -1045,7 +1108,7 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
         onClick={() => setIsChatOpen(true)}
       >
         <MessageSquare className="w-5 h-5" />
-        <span className="font-bold text-sm tracking-wide">AI Chương 5</span>
+        <span className="font-bold text-sm tracking-wide">AI Triết Học</span>
       </Button>
 
       <AnimatePresence>
@@ -1074,7 +1137,7 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
                   <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full" />
                 </div>
                 <div>
-                  <p className="font-serif font-bold text-lg leading-none mb-1 text-zinc-900 dark:text-zinc-100">AI Chương 5</p>
+                  <p className="font-serif font-bold text-lg leading-none mb-1 text-zinc-900 dark:text-zinc-100">AI Triết Học</p>
                   {user && (
                     <p className="text-[10px] text-orange-600 dark:text-orange-400 font-medium uppercase tracking-wider">
                       Chào, {profile?.displayName || user.displayName?.split(" ")[0]}
@@ -1142,6 +1205,56 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
           </motion.div>
         )}
       </AnimatePresence>
+
+      <Dialog open={isTopicDialogOpen} onOpenChange={setIsTopicDialogOpen}>
+        <DialogContent className="w-[95vw] max-w-3xl rounded-[2rem] p-0 overflow-hidden border border-primary/10">
+          <div className="border-b border-primary/10 bg-[linear-gradient(180deg,rgba(247,246,244,0.95),rgba(255,255,255,0.95))] dark:bg-[linear-gradient(180deg,rgba(36,36,40,1),rgba(24,24,27,1))] px-5 py-5 sm:px-7 sm:py-6">
+            <div className="flex items-start gap-4 pr-8">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
+                {activeTopicData.icon}
+              </div>
+              <div>
+                <DialogTitle className="font-serif text-xl sm:text-2xl leading-tight mb-2">{activeTopicData.title}</DialogTitle>
+                <DialogDescription className="text-sm sm:text-base leading-7 text-muted-foreground">
+                  {activeTopicData.subtitle}
+                </DialogDescription>
+              </div>
+            </div>
+          </div>
+
+          <div className="max-h-[75vh] overflow-y-auto px-4 py-4 sm:px-7 sm:py-6">
+            <div className="grid gap-4 sm:gap-5">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {activeTopicData.highlights.map((item, idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-2xl border border-primary/10 bg-primary/[0.03] px-4 py-3 text-sm leading-7 text-foreground/90 break-words"
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+
+              <div className="rounded-[1.5rem] border border-primary/10 bg-secondary/20 dark:bg-zinc-900/60 p-4 sm:p-5">
+                <p className="text-sm font-semibold mb-2">Tóm tắt nhanh</p>
+                <p className="text-sm sm:text-base text-muted-foreground leading-7 sm:leading-8">{activeTopicData.summary}</p>
+              </div>
+
+              <div className="rounded-[1.5rem] border border-primary/10 bg-white dark:bg-zinc-950 p-4 sm:p-5">
+                <p className="text-sm font-semibold mb-3">Nội dung chi tiết</p>
+                <div className="prose prose-slate dark:prose-invert max-w-none text-sm sm:text-base prose-headings:font-serif prose-headings:leading-tight prose-headings:mb-3 prose-p:my-3 prose-p:leading-7 sm:prose-p:leading-8 prose-ul:my-3 prose-ul:space-y-2 prose-li:leading-7 sm:prose-li:leading-8 prose-strong:text-foreground break-words">
+                  <ReactMarkdown>{activeTopicData.content}</ReactMarkdown>
+                </div>
+              </div>
+
+              <div className="rounded-[1.5rem] border border-accent/15 bg-accent/5 p-4 sm:p-5">
+                <p className="text-xs uppercase tracking-[0.18em] text-accent font-semibold mb-2">Ví dụ minh họa</p>
+                <p className="text-sm sm:text-base leading-7 sm:leading-8 text-foreground/90">{activeTopicData.example}</p>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={isProfileDialogOpen} onOpenChange={setIsProfileDialogOpen}>
         <DialogContent className="sm:max-w-[425px] rounded-[2rem]">
