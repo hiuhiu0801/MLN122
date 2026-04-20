@@ -23,7 +23,7 @@ Nguyên tắc trả lời:
 DỮ LIỆU NỀN CỦA BÀI HỌC:
 ${chapter5Knowledge}`;
 
-const CHAT_MODELS = [ "gemini-2.0-flash"];
+const CHAT_MODELS = ["gemini-2.5-flash", "gemini-1.5-flash"];
 
 function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
