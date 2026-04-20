@@ -21,7 +21,6 @@ import {
   Sun,
   Target,
   User,
-  Wallet,
   X,
   Zap,
 } from "lucide-react";
@@ -32,6 +31,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Dialog,
   DialogContent,
@@ -121,16 +121,16 @@ const STRUCTURE_ITEMS = [
   },
 ];
 
-const PhilosophicalParticles = ({ density = 16, className = "" }: { density?: number; className?: string }) => {
+const PhilosophicalParticles = ({ density = 25, className = "" }: { density?: number; className?: string }) => {
   const particles = useMemo(
     () =>
       Array.from({ length: density }).map(() => ({
         xInit: `${Math.random() * 100}%`,
         yInit: `${Math.random() * 100}%`,
         scaleInit: Math.random() * 0.5 + 0.5,
-        xAnim: `${Math.random() * 8 - 4}%`,
-        opacityMax: Math.random() * 0.35 + 0.15,
-        duration: Math.random() * 5 + 6,
+        xAnim: `${Math.random() * 10 - 5}%`,
+        opacityMax: Math.random() * 0.4 + 0.2,
+        duration: Math.random() * 5 + 5,
         delay: Math.random() * 3,
       })),
     [density]
@@ -141,13 +141,13 @@ const PhilosophicalParticles = ({ density = 16, className = "" }: { density?: nu
       {particles.map((p, i) => (
         <motion.div
           key={i}
-          className="absolute w-1.5 h-1.5 rounded-full bg-primary/30 dark:bg-primary/40 blur-[1px]"
+          className="absolute w-1.5 h-1.5 bg-primary/30 dark:bg-primary/50 rounded-full blur-[1px]"
           initial={{ x: p.xInit, y: p.yInit, opacity: 0, scale: p.scaleInit }}
           animate={{
-            y: ["0%", "12%", "-10%", "0%"],
+            y: ["0%", "15%", "-15%", "0%"],
             x: ["0%", p.xAnim, "0%"],
             opacity: [0, p.opacityMax, 0],
-            scale: [0.8, 1.15, 0.8],
+            scale: [0.8, 1.2, 0.8],
           }}
           transition={{ duration: p.duration, repeat: Infinity, ease: "easeInOut", delay: p.delay }}
         />
@@ -186,9 +186,15 @@ export default function App() {
   const [isAuthSubmitting, setIsAuthSubmitting] = useState(false);
   const [newDisplayName, setNewDisplayName] = useState("");
   const [newPhotoURL, setNewPhotoURL] = useState("");
+  
+  // State quản lý việc mở rộng/thu gọn nội dung của phần Supplement
   const [expandedSupplement, setExpandedSupplement] = useState<string | null>("supp-1");
-  const [activeTopic, setActiveTopic] = useState("topic-1");
-  const [isTopicDialogOpen, setIsTopicDialogOpen] = useState(false);
+  
+  // State quản lý việc mở rộng/thu gọn nội dung dài của Tab (Nội dung trọng tâm)
+  const [expandedTopics, setExpandedTopics] = useState<Record<string, boolean>>({});
+  const toggleExpandTopic = (id: string) => {
+    setExpandedTopics((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -281,26 +287,11 @@ export default function App() {
     const code = error?.code;
     switch (code) {
       case "auth/email-already-in-use":
-        return "Email này đã được sử dụng. Hãy đăng nhập hoặc dùng Google nếu bạn đã đăng ký bằng Google.";
-      case "auth/account-exists-with-different-credential":
-        return "Email này đã tồn tại với phương thức đăng nhập khác. Hãy dùng đúng phương thức trước đó.";
+        return "Email này đã được sử dụng.";
       case "auth/invalid-credential":
       case "auth/wrong-password":
       case "auth/user-not-found":
-      case "auth/invalid-login-credentials":
         return "Email hoặc mật khẩu không chính xác.";
-      case "auth/popup-closed-by-user":
-        return "Bạn đã đóng cửa sổ đăng nhập Google.";
-      case "auth/too-many-requests":
-        return "Bạn thao tác quá nhiều lần. Vui lòng thử lại sau ít phút.";
-      case "auth/invalid-email":
-        return "Email không hợp lệ.";
-      case "auth/weak-password":
-        return "Mật khẩu quá yếu. Hãy dùng ít nhất 6 ký tự.";
-      case "auth/operation-not-allowed":
-        return mode === "register"
-          ? "Email/Password chưa được bật trong Firebase Authentication."
-          : "Phương thức đăng nhập này chưa được bật trong Firebase Authentication.";
       default:
         return mode === "register" ? "Đăng ký thất bại. Vui lòng thử lại." : "Đăng nhập thất bại. Vui lòng thử lại.";
     }
@@ -321,12 +312,7 @@ export default function App() {
       resetAuthForm();
       toast.success("Đăng nhập thành công!");
     } catch (error: any) {
-      console.error("Google login failed", error);
-      if (error?.code === "auth/account-exists-with-different-credential") {
-        setAuthError("Email này đã đăng ký bằng mật khẩu. Hãy đăng nhập bằng email và mật khẩu trước.");
-      } else {
-        setAuthError(getReadableAuthError(error, "login"));
-      }
+      setAuthError(getReadableAuthError(error, "login"));
     } finally {
       setIsAuthSubmitting(false);
     }
@@ -349,10 +335,6 @@ export default function App() {
       }
       if (password.length < 6) {
         setAuthError("Mật khẩu phải có ít nhất 6 ký tự.");
-        return;
-      }
-      if (!registerName.trim()) {
-        setAuthError("Vui lòng nhập tên của bạn.");
         return;
       }
     }
@@ -382,7 +364,6 @@ export default function App() {
       resetAuthForm();
       toast.success("Đăng nhập thành công!");
     } catch (error: any) {
-      console.error(`${authMode} failed`, error);
       setAuthError(getReadableAuthError(error, authMode));
     } finally {
       setIsAuthSubmitting(false);
@@ -395,12 +376,10 @@ export default function App() {
       setAuthError("Hãy nhập email trước khi yêu cầu đặt lại mật khẩu.");
       return;
     }
-
     try {
       await sendPasswordResetEmail(auth, normalizedEmail);
       toast.success("Đã gửi email đặt lại mật khẩu.");
     } catch (error: any) {
-      console.error("Reset password failed", error);
       setAuthError(getReadableAuthError(error, "login"));
     }
   };
@@ -416,42 +395,11 @@ export default function App() {
 
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
 
-  const uploadToCloudinary = async (dataUrl: string) => {
-    const cloudName = (import.meta as any).env.VITE_CLOUDINARY_CLOUD_NAME;
-    const uploadPreset = (import.meta as any).env.VITE_CLOUDINARY_UPLOAD_PRESET;
-
-    if (!cloudName || !uploadPreset) {
-      throw new Error("Cloudinary configuration missing");
-    }
-
-    const formData = new FormData();
-    formData.append("file", dataUrl);
-    formData.append("upload_preset", uploadPreset);
-
-    const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error("Cloudinary upload error response:", errorData);
-      throw new Error(`Cloudinary upload failed: ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return data.secure_url;
-  };
-
   const handleUpdateProfile = async () => {
     if (!user || !newDisplayName.trim()) return;
     setIsUpdatingProfile(true);
     try {
       let photoURL = newPhotoURL.trim() || profile?.photoURL || "";
-      if (photoURL.startsWith("data:image/")) {
-        photoURL = await uploadToCloudinary(photoURL);
-      }
-
       const updatedProfile = { displayName: newDisplayName.trim(), photoURL };
       await updateProfile(user, updatedProfile);
       saveLocalProfile(user.uid, updatedProfile);
@@ -459,7 +407,6 @@ export default function App() {
       setIsProfileDialogOpen(false);
       toast.success("Cập nhật hồ sơ thành công!");
     } catch (error) {
-      console.error("Update profile failed", error);
       toast.error("Cập nhật hồ sơ thất bại.");
     } finally {
       setIsUpdatingProfile(false);
@@ -470,7 +417,7 @@ export default function App() {
     {
       id: "topic-1",
       shortTitle: "Khái niệm",
-      title: "Khái niệm kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam",
+      title: "Khái niệm kinh tế thị trường định hướng XHCN",
       subtitle: "Nền kinh tế vận hành theo quy luật thị trường nhưng hướng tới mục tiêu xã hội chủ nghĩa.",
       icon: <BookOpen className="w-6 h-6 text-accent" />,
       summary:
@@ -499,14 +446,14 @@ Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam
     {
       id: "topic-2",
       shortTitle: "Tính tất yếu",
-      title: "Tính tất yếu khách quan của việc phát triển mô hình ở Việt Nam",
+      title: "Tính tất yếu khách quan của việc phát triển mô hình",
       subtitle: "Sự lựa chọn phù hợp với quy luật phát triển khách quan và nguyện vọng của nhân dân.",
       icon: <Target className="w-6 h-6 text-accent" />,
       summary:
         "Việc phát triển mô hình này là tất yếu vì phù hợp với quy luật phát triển khách quan, phát huy ưu thế của kinh tế thị trường trong thúc đẩy phát triển, đồng thời đáp ứng mục tiêu dân giàu, nước mạnh, dân chủ, công bằng, văn minh.",
       highlights: [
         "Phù hợp với quy luật phát triển khách quan.",
-        "Phát huy tính ưu việt của kinh tế thị trường trong thúc đẩy lực lượng sản xuất.",
+        "Phát huy tính ưu việt của kinh tế thị trường.",
         "Phù hợp với nguyện vọng của nhân dân Việt Nam.",
       ],
       content: `
@@ -528,15 +475,15 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
     {
       id: "topic-3",
       shortTitle: "Đặc trưng",
-      title: "Đặc trưng của nền kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam",
+      title: "Đặc trưng của nền kinh tế thị trường định hướng XHCN",
       subtitle: "Bao hàm đặc trưng của kinh tế thị trường nói chung và nét đặc thù của Việt Nam.",
       icon: <Layers className="w-6 h-6 text-accent" />,
       summary:
         "Nền kinh tế này có các đặc trưng tiêu biểu về mục tiêu phát triển, quan hệ sở hữu và thành phần kinh tế, quan hệ quản lý nền kinh tế, quan hệ phân phối và gắn tăng trưởng kinh tế với tiến bộ, công bằng xã hội.",
       highlights: [
-        "Mục tiêu hướng tới phát triển lực lượng sản xuất và nâng cao đời sống nhân dân.",
-        "Nhiều hình thức sở hữu, nhiều thành phần kinh tế; kinh tế nhà nước giữ vai trò chủ đạo, kinh tế tư nhân là động lực quan trọng.",
-        "Phát triển kinh tế đi đôi với tiến bộ và công bằng xã hội.",
+        "Hướng tới phát triển lực lượng sản xuất.",
+        "Nhiều hình thức sở hữu, thành phần kinh tế.",
+        "Phát triển kinh tế đi đôi với tiến bộ xã hội.",
       ],
       content: `
 **Nhóm đặc trưng chủ yếu**
@@ -596,13 +543,6 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
     },
   ];
 
-  const activeTopicData = topics.find((topic) => topic.id === activeTopic) ?? topics[0];
-
-  const openTopicDialog = (topicId: string) => {
-    setActiveTopic(topicId);
-    setIsTopicDialogOpen(true);
-  };
-
   const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 
   useEffect(() => {
@@ -619,7 +559,6 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
-
     const userMessage = inputValue.trim();
     const newMessage: Message = { role: "user", text: userMessage };
 
@@ -633,7 +572,6 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
       const response = await getChatResponse(userMessage, history);
       appendLocalMessage({ role: "model", text: response || "Xin lỗi, tôi không thể trả lời lúc này." });
     } catch (error) {
-      console.error("Handle send message failed", error);
       appendLocalMessage({ role: "model", text: "Xin lỗi, đã có lỗi xảy ra khi xử lý câu hỏi của bạn." });
     } finally {
       setIsLoading(false);
@@ -653,14 +591,15 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground">
+    <div className="min-h-screen flex flex-col">
       <Toaster position="top-right" richColors />
 
-      <nav className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/70">
+      {/* Navigation */}
+      <nav className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <BookOpen className="w-6 h-6 text-primary" />
-            <span className="text-lg md:text-xl font-serif font-bold">KTTT định hướng XHCN</span>
+            <span className="text-xl font-serif font-bold">KTTT định hướng XHCN</span>
           </div>
 
           <div className="hidden md:flex items-center gap-6">
@@ -694,13 +633,7 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
                       </DropdownMenuLabel>
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => {
-                        setNewDisplayName(profile?.displayName || user.displayName || "");
-                        setNewPhotoURL(profile?.photoURL || user.photoURL || "");
-                        setIsProfileDialogOpen(true);
-                      }}
-                    >
+                    <DropdownMenuItem onClick={() => setIsProfileDialogOpen(true)}>
                       <Settings className="mr-2 h-4 w-4" />
                       <span>Tùy chỉnh hồ sơ</span>
                     </DropdownMenuItem>
@@ -722,7 +655,7 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
               )}
 
               <Button variant="outline" size="sm" onClick={() => setIsChatOpen(true)} className="rounded-full h-9">
-                Hỏi AI
+                Hỏi Chatbot
               </Button>
             </div>
           </div>
@@ -730,283 +663,284 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
       </nav>
 
       <main className="flex-1 overflow-x-hidden">
-        <section id="intro" className="relative pt-20 pb-14 md:pt-24 md:pb-16 overflow-hidden bg-[linear-gradient(180deg,rgba(247,246,244,0.95),rgba(245,242,239,0.9))] dark:bg-[linear-gradient(180deg,rgba(19,19,20,1),rgba(24,24,27,1))]">
-          <PhilosophicalParticles density={18} className="opacity-70" />
+        {/* Hero Section với Hình 1 */}
+        <section
+          id="intro"
+          className="relative pt-32 pb-24 overflow-hidden z-10 bg-fixed bg-center bg-cover"
+          style={{ backgroundImage: 'url("/images/Section1.png")' }}
+        >
+          <div className="absolute inset-0 bg-black/40 dark:bg-background/60 backdrop-blur-[2px] -z-10" />
+          <PhilosophicalParticles density={25} className="-z-10 opacity-50" />
+
           <div className="container mx-auto px-4 md:px-6 relative z-10">
-            <div className="grid lg:grid-cols-[1.2fr_0.8fr] gap-8 items-stretch max-w-6xl mx-auto">
-              <div className="rounded-[2.5rem] border border-primary/10 bg-white/80 dark:bg-zinc-950/70 shadow-2xl shadow-primary/5 p-7 md:p-10 backdrop-blur-sm">
-                <div className="flex flex-wrap gap-2 mb-6">
-                  <Badge className="rounded-full bg-primary/10 text-primary hover:bg-primary/10 border-none">Chủ đề thuyết trình</Badge>
-                  <Badge variant="outline" className="rounded-full">Chương 5</Badge>
-                </div>
-                <h1 className="text-4xl md:text-6xl font-serif italic leading-[0.95] tracking-tight mb-5">
-                  Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam
+            <div className="max-w-5xl mx-auto text-center">
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+                <Badge variant="outline" className="mb-8 px-4 py-1 border-white/40 text-white font-medium tracking-wider uppercase text-[10px] drop-shadow-sm">
+                  Chương 5 - Nhóm 5
+                </Badge>
+
+                <h1 className="text-5xl md:text-7xl lg:text-8xl mb-8 leading-[0.9] tracking-tight font-serif italic text-white drop-shadow-lg">
+                  Kinh tế thị trường <br className="hidden md:block" />
+                  <span className="text-white not-italic">Định hướng XHCN</span>
                 </h1>
-                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-7 max-w-3xl">
+
+                <p className="text-xl md:text-2xl text-white max-w-3xl mx-auto mb-12 font-sans font-medium leading-relaxed drop-shadow-xl">
                   Một bản web học tập tập trung đúng phạm vi phần Nhóm 5: khái niệm, tính tất yếu khách quan và đặc trưng của kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.
                 </p>
-                <div className="grid sm:grid-cols-3 gap-3 mb-7">
-                  <div className="rounded-2xl border border-primary/10 bg-primary/[0.03] p-4">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-primary font-semibold mb-2">Phạm vi</p>
-                    <p className="text-sm leading-6">Nội dung về Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam theo giáo trình Triết Học FPT</p>
-                  </div>
-                  <div className="rounded-2xl border border-primary/10 bg-primary/[0.03] p-4">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-primary font-semibold mb-2">Tương tác</p>
-                    <p className="text-sm leading-6">Có các tab nội dung chính, mục mở rộng bấm để xem thêm, chatbot và flipbook.</p>
-                  </div>
-                  <div className="rounded-2xl border border-primary/10 bg-primary/[0.03] p-4">
-                    <p className="text-[11px] uppercase tracking-[0.18em] text-primary font-semibold mb-2">Trình bày</p>
-                    <p className="text-sm leading-6">Bố cục gọn, nội dung tóm gọn dễ học.</p>
-                  </div>
+
+                <div className="max-w-4xl mx-auto mb-12 overflow-hidden rounded-[2.5rem] border border-white/20 bg-white/10 dark:bg-zinc-900/50 shadow-2xl backdrop-blur-sm">
+                  <img
+                    src={FEATURE_IMAGES.overview}
+                    alt="Tài liệu học tập chương 5"
+                    className="h-[260px] md:h-[360px] w-full object-cover"
+                  />
                 </div>
-                <div className="flex flex-wrap gap-4">
-                  <a href="#topics" className={cn(buttonVariants({ size: "lg" }), "rounded-full px-8")}>
-                    Xem nội dung chính <ArrowRight className="ml-2 w-4 h-4" />
+                <div className="flex flex-wrap justify-center gap-6">
+                  <a href="#topics" className={cn(buttonVariants({ size: "lg", variant: "default" }), "rounded-full px-10 h-14 text-base shadow-lg shadow-primary/20 flex items-center justify-center")}>
+                    Xem nội dung chính <ArrowRight className="ml-2 w-5 h-5" />
                   </a>
-                  <Button variant="outline" size="lg" className="rounded-full px-8" onClick={() => setIsChatOpen(true)}>
+                  <a href="#flipbook" className={cn(buttonVariants({ size: "lg", variant: "outline" }), "rounded-full px-10 h-14 text-base border-white/30 bg-white/10 text-white hover:bg-white/20 hover:text-white backdrop-blur-sm")}>
+                    Mở Flipbook
+                  </a>
+                  <Button size="lg" variant="outline" className="rounded-full px-10 h-14 text-base border-primary/20 hover:bg-primary/5" onClick={() => setIsChatOpen(true)}>
                     AI Triết Học
                   </Button>
                 </div>
-              </div>
-
-              <div className="rounded-[2.5rem] border border-primary/10 bg-white/80 dark:bg-zinc-950/70 shadow-2xl shadow-primary/5 p-6 md:p-7 backdrop-blur-sm flex flex-col">
-                <div className="overflow-hidden rounded-[2rem] border border-primary/10 mb-6">
-                  <img src={FEATURE_IMAGES.overview} alt="Tài liệu học tập chương 5" className="h-56 w-full object-cover" />
-                </div>
-                <h2 className="text-3xl font-serif italic mb-5">Cấu trúc nội dung trọng tâm</h2>
-                <div className="space-y-3">
-                  {STRUCTURE_ITEMS.map((item, index) => (
-                    <a
-                      key={item.id}
-                      href={`#${item.id}`}
-                      className="flex items-start gap-4 rounded-2xl border border-primary/10 bg-background/80 px-4 py-4 hover:border-primary/30 hover:bg-primary/[0.03] transition-colors"
-                    >
-                      <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">
-                        {index + 1}
-                      </div>
-                      <div className="min-w-0">
-                        <p className="font-semibold leading-6">{item.title}</p>
-                        <p className="text-sm text-muted-foreground leading-6">{item.desc}</p>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </section>
 
-        <section id="overview" className="py-14 md:py-16 bg-background">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="max-w-6xl mx-auto grid lg:grid-cols-[0.95fr_1.05fr] gap-8 items-start">
-              <div className="rounded-[2rem] border border-primary/10 bg-card p-6 md:p-8 shadow-xl shadow-primary/5">
-                <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/10 border-none rounded-full px-4">Tổng quan</Badge>
-                <h2 className="text-3xl md:text-5xl font-serif italic mb-6">Khái niệm và định hướng phát triển</h2>
-                <div className="space-y-6 text-muted-foreground leading-8 text-base md:text-lg">
-                  <div className="flex gap-4">
-                    <div className="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                      <BookOpen className="w-5 h-5 text-primary" />
+        {/* Overview Section với Hình 2 */}
+        <section
+          id="overview"
+          className="py-24 relative z-10 bg-center bg-cover"
+          style={{ backgroundImage: 'url("/images/Section2.png")' }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-white/90 to-white/70 dark:from-zinc-950/90 dark:to-zinc-950/80 backdrop-blur-md -z-10" />
+
+          <div className="container mx-auto px-4 md:px-6 relative z-10">
+            <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center max-w-5xl mx-auto">
+              <div>
+                <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 border-none rounded-full px-4">Tổng quan</Badge>
+                <h2 className="text-4xl md:text-5xl font-serif italic mb-8">Khái niệm & Định hướng phát triển</h2>
+                <div className="space-y-8">
+                  <div className="flex gap-6">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-secondary/50 dark:bg-zinc-900 flex items-center justify-center">
+                      <BookOpen className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-foreground mb-2">Khái niệm trọng tâm</h3>
-                      <p>
+                      <h4 className="text-xl font-bold mb-2">Khái niệm trọng tâm</h4>
+                      <p className="text-muted-foreground leading-relaxed mb-4">
                         Kinh tế thị trường định hướng xã hội chủ nghĩa là nền kinh tế vận hành theo các quy luật của thị trường, đồng thời hướng tới từng bước xác lập một xã hội dân giàu, nước mạnh, dân chủ, công bằng, văn minh; có sự điều tiết của Nhà nước do Đảng Cộng sản Việt Nam lãnh đạo.
                       </p>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="p-3 bg-primary/5 rounded-xl border border-primary/10">
+                          <span className="text-[10px] font-mono uppercase text-primary block mb-1">Vận hành</span>
+                          <p className="text-xs">Theo các quy luật của thị trường và các yếu tố cạnh tranh.</p>
+                        </div>
+                        <div className="p-3 bg-primary/5 rounded-xl border border-primary/10">
+                          <span className="text-[10px] font-mono uppercase text-primary block mb-1">Định hướng</span>
+                          <p className="text-xs">Hướng tới mục tiêu xã hội chủ nghĩa phù hợp với Việt Nam.</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <div className="grid sm:grid-cols-2 gap-3 pl-[3.75rem]">
-                    <div className="rounded-2xl border border-primary/10 p-4 bg-primary/[0.03]">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-primary font-semibold mb-1">Vận hành</p>
-                      <p className="text-sm leading-6">Theo các quy luật của thị trường và các yếu tố cạnh tranh, cung cầu, giá cả.</p>
-                    </div>
-                    <div className="rounded-2xl border border-primary/10 p-4 bg-primary/[0.03]">
-                      <p className="text-[11px] uppercase tracking-[0.18em] text-primary font-semibold mb-1">Định hướng</p>
-                      <p className="text-sm leading-6">Hướng tới mục tiêu xã hội chủ nghĩa phù hợp với điều kiện Việt Nam.</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-4">
-                    <div className="w-11 h-11 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                      <Target className="w-5 h-5 text-primary" />
+                  <div className="flex gap-6">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-2xl bg-secondary/50 dark:bg-zinc-900 flex items-center justify-center">
+                      <Target className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold text-foreground mb-2">Tính tất yếu khách quan</h3>
-                      <p>
-                        Việc phát triển mô hình này phù hợp với quy luật phát triển khách quan, phát huy ưu thế của kinh tế thị trường trong thúc đẩy phát triển và đồng thời phù hợp với nguyện vọng của nhân dân về mục tiêu dân giàu, nước mạnh, dân chủ, công bằng, văn minh.
+                      <h4 className="text-xl font-bold mb-2">Tính tất yếu khách quan</h4>
+                      <p className="text-muted-foreground leading-relaxed">
+                        Việc phát triển mô hình này phù hợp với quy luật phát triển khách quan, phát huy ưu thế của kinh tế thị trường trong thúc đẩy phát triển và đồng thời phù hợp với nguyện vọng của nhân dân.
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="rounded-[2rem] border border-primary/10 bg-card p-6 md:p-8 shadow-xl shadow-primary/5">
-                <div className="overflow-hidden rounded-[1.75rem] border border-primary/10 mb-6">
-                  <img src={FEATURE_IMAGES.hero} alt="Không gian đọc tài liệu" className="h-60 md:h-72 w-full object-cover" />
-                </div>
-                <h3 className="text-2xl md:text-3xl font-serif italic mb-4">3 mảng kiến thức chính cần nắm</h3>
-                <div className="grid gap-3">
-                  {STRUCTURE_ITEMS.map((item, index) => (
-                    <div key={item.id} className="rounded-2xl border border-primary/10 bg-background px-4 py-4">
-                      <div className="flex items-center justify-between gap-3 mb-1">
-                        <p className="font-semibold">{index + 1}. {item.title}</p>
-                        <Badge variant="secondary" className="rounded-full">{item.id === "khai-niem" ? "Cốt lõi" : "Trọng tâm"}</Badge>
-                      </div>
-                      <p className="text-sm text-muted-foreground leading-6">{item.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="topics" className="py-14 md:py-16 bg-[linear-gradient(180deg,rgba(247,246,244,0.88),rgba(242,239,235,0.7))] dark:bg-[linear-gradient(180deg,rgba(24,24,27,1),rgba(20,20,23,1))]">
-          <div className="container mx-auto px-4 md:px-6">
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-8 md:mb-10 px-2">
-                <Badge className="mb-4 rounded-full bg-primary/10 px-4 py-1.5 text-primary hover:bg-primary/10 border-none">Nhóm 5</Badge>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif italic tracking-tight mb-3">Nội dung trọng tâm</h2>
-                <div className="w-16 h-1 bg-primary rounded-full mx-auto mb-4" />
-                <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-muted-foreground leading-7 md:leading-8">
-                  Nội dung trọng tâm và chi tiết về từng phần, bấm xem bảng chi tiết để không bỏ lỡ nội dung.
-                </p>
-              </div>
-
-              <div className="grid gap-4 lg:grid-cols-[0.92fr_1.08fr] items-start">
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-                  {topics.map((topic, index) => {
-                    const isActive = activeTopic === topic.id;
-                    return (
-                      <div
-                        key={topic.id}
-                        role="button"
-                        tabIndex={0}
-                        onClick={() => setActiveTopic(topic.id)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            setActiveTopic(topic.id);
-                          }
-                        }}
-                        className={cn(
-                          "group text-left rounded-[1.75rem] border p-5 md:p-6 bg-white/95 dark:bg-zinc-950 shadow-sm transition-all duration-200",
-                          isActive
-                            ? "border-primary/30 shadow-xl shadow-primary/5 ring-1 ring-primary/10"
-                            : "border-primary/10 hover:border-primary/25 hover:-translate-y-0.5"
-                        )}
-                      >
-                        <div className="flex items-start justify-between gap-4 mb-4">
-                          <div className="flex items-center gap-3 min-w-0">
-                            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
-                              {topic.icon}
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-[11px] uppercase tracking-[0.18em] text-primary/80 font-semibold mb-1">Mục {index + 1}</p>
-                              <h3 className="text-lg md:text-xl font-semibold leading-6 text-foreground">{topic.shortTitle}</h3>
-                            </div>
-                          </div>
-                          <ChevronRight className={cn("w-5 h-5 shrink-0 text-primary/60 transition-transform", isActive && "translate-x-1")} />
+              <div className="relative">
+                <div className="absolute -inset-4 bg-primary/5 rounded-[3rem] blur-2xl" />
+                <div className="relative bg-secondary/20 dark:bg-zinc-900/50 border border-primary/5 p-10 rounded-[3rem] backdrop-blur-sm">
+                  <h4 className="text-2xl font-serif italic mb-6">3 mảng kiến thức chính cần nắm</h4>
+                  <div className="grid grid-cols-1 gap-4">
+                    {STRUCTURE_ITEMS.map((item, index) => (
+                      <div key={item.id} className="flex flex-col p-4 bg-white dark:bg-zinc-800 rounded-2xl shadow-sm">
+                        <div className="flex items-center justify-between mb-2">
+                           <span className="font-medium">{index + 1}. {item.title}</span>
+                           <Badge variant="secondary" className="rounded-full">{item.id === "khai-niem" ? "Cốt lõi" : "Trọng tâm"}</Badge>
                         </div>
-
-                        <p className="text-sm md:text-[15px] leading-6 text-muted-foreground mb-4 line-clamp-3">{topic.summary}</p>
-
-                        <div className="grid gap-2.5">
-                          {topic.highlights.slice(0, 2).map((item, idx) => (
-                            <div key={idx} className="rounded-2xl bg-primary/[0.04] border border-primary/10 px-3.5 py-3 text-sm leading-6 text-foreground/90">
-                              {item}
-                            </div>
-                          ))}
-                        </div>
-
-                        <div className="mt-4 flex flex-wrap items-center gap-2.5">
-                          <Button
-                            type="button"
-                            size="sm"
-                            className="rounded-full px-4"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              openTopicDialog(topic.id);
-                            }}
-                          >
-                            Xem bảng chi tiết
-                          </Button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                <div className="rounded-[2rem] border border-primary/10 bg-white/95 dark:bg-zinc-950 shadow-xl shadow-primary/5 p-5 sm:p-6 md:p-7 sticky top-20">
-                  <div className="flex flex-wrap items-center gap-3 mb-5">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10">
-                      {activeTopicData.icon}
-                    </div>
-                    <div>
-                      <p className="text-xs uppercase tracking-[0.18em] text-primary font-semibold mb-1">Đang chọn</p>
-                      <h3 className="text-xl sm:text-2xl md:text-[1.75rem] font-serif leading-tight">{activeTopicData.title}</h3>
-                    </div>
-                  </div>
-
-                  <p className="text-sm sm:text-base text-accent italic leading-7 mb-5">{activeTopicData.subtitle}</p>
-
-                  <div className="grid gap-3 sm:grid-cols-3 mb-5">
-                    {activeTopicData.highlights.map((item, idx) => (
-                      <div key={idx} className="rounded-2xl border border-primary/10 bg-primary/[0.03] px-4 py-3.5 text-sm leading-6">
-                        {item}
+                        <p className="text-sm text-muted-foreground">{item.desc}</p>
                       </div>
                     ))}
                   </div>
-
-                  <div className="rounded-[1.5rem] border border-primary/10 bg-secondary/20 dark:bg-zinc-900/70 p-4 sm:p-5 mb-5">
-                    <p className="text-sm font-semibold mb-2">Tóm tắt nhanh</p>
-                    <p className="text-sm sm:text-base text-muted-foreground leading-7">{activeTopicData.summary}</p>
-                  </div>
-
-                  <div className="rounded-[1.5rem] border border-accent/15 bg-accent/5 p-4 sm:p-5">
-                    <p className="text-xs uppercase tracking-[0.18em] text-accent font-semibold mb-2">Ví dụ ngắn</p>
-                    <p className="text-sm sm:text-base leading-7 text-foreground/90">{activeTopicData.example}</p>
-                  </div>
-
-                  <div className="mt-5 flex flex-col sm:flex-row gap-3">
-                    <Button className="rounded-full px-5" onClick={() => openTopicDialog(activeTopicData.id)}>
-                      Mở bảng nội dung
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="rounded-full px-5"
-                      onClick={() => handleGenerateImage(activeTopicData.id)}
-                      disabled={isGeneratingImage[activeTopicData.id]}
-                    >
-                      {isGeneratingImage[activeTopicData.id] ? "Đang tạo ảnh..." : activeTopicData.imageUrl ? "Tạo lại ảnh AI" : "Tạo ảnh minh họa AI"}
-                    </Button>
-                  </div>
-
-                  {activeTopicData.imageUrl && (
-                    <div className="mt-5 overflow-hidden rounded-[1.5rem] border border-primary/10">
-                      <img
-                        src={activeTopicData.imageUrl}
-                        alt={activeTopicData.title}
-                        className="h-52 sm:h-60 w-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section id="supplement" className="py-14 md:py-16 bg-background">
-          <div className="container mx-auto px-4 md:px-6">
+        {/* Topics Section (Dùng cấu trúc Tabs) với Hình 3 */}
+        <section
+          id="topics"
+          className="py-32 relative z-10 bg-fixed bg-center bg-cover"
+          style={{ backgroundImage: 'url("/images/Section3.png")' }}
+        >
+          <div className="absolute inset-0 bg-secondary/80 dark:bg-zinc-900/90 backdrop-blur-lg -z-10" />
+
+          <div className="container mx-auto px-4 md:px-6 relative z-10">
+            <div className="text-center mb-20">
+              <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 border-none rounded-full px-4">Nhóm 5</Badge>
+              <h2 className="text-4xl md:text-5xl mb-6 font-serif italic">Nội dung trọng tâm</h2>
+              <div className="w-20 h-1 bg-primary mx-auto mb-6 rounded-full" />
+              <p className="text-muted-foreground dark:text-zinc-400 max-w-xl mx-auto text-lg font-light">
+                Nội dung trọng tâm và chi tiết về từng phần.
+              </p>
+            </div>
+
+            <Tabs defaultValue="topic-1" className="w-full max-w-5xl mx-auto">
+              <TabsList className="flex flex-wrap md:grid w-full md:grid-cols-3 h-auto p-2 bg-white/50 dark:bg-zinc-800/50 backdrop-blur-sm border border-primary/10 rounded-2xl mb-12">
+                {topics.map((topic) => (
+                  <TabsTrigger
+                    key={topic.id}
+                    value={topic.id}
+                    className="flex-1 py-4 text-muted-foreground data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800 data-[state=active]:text-primary data-[state=active]:shadow-xl data-[state=active]:shadow-primary/5 rounded-xl transition-all duration-300"
+                  >
+                    <span className="text-sm md:text-base font-bold tracking-tight">{topic.shortTitle}</span>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+
+              {topics.map((topic) => (
+                <TabsContent key={topic.id} value={topic.id} className="mt-0">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="grid md:grid-cols-12 bg-white dark:bg-zinc-950 rounded-[2.5rem] shadow-2xl shadow-primary/5 overflow-hidden border border-primary/5"
+                  >
+                    {/* Cột trái: Tiêu đề & Ảnh AI */}
+                    <div className="md:col-span-5 bg-primary/[0.02] p-10 flex flex-col border-b md:border-b-0 md:border-r border-primary/5">
+                      <div className="w-20 h-20 rounded-3xl bg-white dark:bg-zinc-900 flex items-center justify-center shadow-xl shadow-primary/5 mb-8 transform -rotate-3">
+                        {topic.icon}
+                      </div>
+                      <h3 className="text-3xl mb-4 font-serif leading-tight">{topic.title}</h3>
+                      <p className="text-base text-accent font-medium italic mb-10 opacity-80">{topic.subtitle}</p>
+
+                      <div className="w-full mt-auto">
+                        <div className="aspect-[4/3] w-full rounded-3xl bg-secondary/50 border border-dashed border-primary/20 flex flex-col items-center justify-center overflow-hidden relative group shadow-inner">
+                          {topic.imageUrl ? (
+                            <>
+                              <img src={topic.imageUrl} alt={topic.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
+                              <div className="absolute inset-0 bg-primary/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-[2px]">
+                                <Button variant="secondary" className="rounded-full px-6 shadow-xl" onClick={() => handleGenerateImage(topic.id)} disabled={isGeneratingImage[topic.id]}>
+                                  {isGeneratingImage[topic.id] ? "Đang tạo..." : "Tạo lại ảnh AI"}
+                                </Button>
+                              </div>
+                            </>
+                          ) : (
+                            <div className="p-8 flex flex-col items-center text-center">
+                              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                                <Zap className="w-6 h-6 text-primary/40" />
+                              </div>
+                              <p className="text-xs text-muted-foreground mb-6 font-medium">Chưa có hình ảnh minh họa AI</p>
+                              <Button variant="outline" className="rounded-full border-primary/20 hover:bg-primary/5" onClick={() => handleGenerateImage(topic.id)} disabled={isGeneratingImage[topic.id]}>
+                                {isGeneratingImage[topic.id] ? "Đang tạo..." : "Tạo ảnh minh họa AI"}
+                              </Button>
+                            </div>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-muted-foreground mt-4 italic text-center opacity-60">
+                          * Hình ảnh được tạo ngẫu nhiên bởi AI dựa trên nội dung bài học
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Cột phải: Nội dung & Nút mở rộng */}
+                    <div className="md:col-span-7 p-12 lg:p-16 flex flex-col justify-center">
+                      <div className="rounded-[1.5rem] border border-primary/10 bg-secondary/20 dark:bg-zinc-900/70 p-5 mb-8">
+                        <p className="text-sm font-semibold mb-2">Tóm tắt nhanh</p>
+                        <p className="text-sm sm:text-base text-muted-foreground leading-7">{topic.summary}</p>
+                      </div>
+
+                      <div className="grid gap-3 sm:grid-cols-2 mb-4">
+                        {topic.highlights.map((item, idx) => (
+                          <div key={idx} className="rounded-2xl border border-primary/10 bg-primary/[0.03] px-4 py-3 text-sm leading-6">
+                            {item}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Phân vùng Nội dung chi tiết được giấu/hiện (Collapse/Expand) */}
+                      <AnimatePresence initial={false}>
+                        {expandedTopics[topic.id] && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.35, ease: "easeInOut" }}
+                            className="overflow-hidden"
+                          >
+                            <div className="prose prose-slate dark:prose-invert max-w-none text-zinc-800 dark:text-zinc-200 leading-relaxed font-sans text-lg mt-6 mb-8">
+                              <ReactMarkdown>{topic.content}</ReactMarkdown>
+                            </div>
+
+                            <div className="p-8 bg-accent/5 dark:bg-accent/10 rounded-3xl border border-accent/10 relative overflow-hidden mb-6">
+                              <div className="absolute top-0 right-0 p-4 opacity-10">
+                                <BookOpen className="w-12 h-12 text-accent" />
+                              </div>
+                              <h4 className="text-accent font-bold mb-3 flex items-center gap-2 text-sm uppercase tracking-widest">
+                                <span className="w-8 h-[1px] bg-accent/30" />
+                                Ví dụ minh họa
+                              </h4>
+                              <p className="text-foreground/80 dark:text-zinc-300 italic font-serif text-xl leading-relaxed">
+                                "{topic.example}"
+                              </p>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      <div className="flex justify-center mt-6">
+                        <Button
+                          variant={expandedTopics[topic.id] ? "outline" : "default"}
+                          onClick={() => toggleExpandTopic(topic.id)}
+                          className="rounded-full px-8 shadow-lg shadow-primary/20 transition-all duration-300"
+                        >
+                          {expandedTopics[topic.id] ? (
+                            <>Thu gọn nội dung <ChevronDown className="ml-2 w-4 h-4 rotate-180 transition-transform" /></>
+                          ) : (
+                            <>Xem toàn bộ chi tiết <ChevronDown className="ml-2 w-4 h-4 transition-transform" /></>
+                          )}
+                        </Button>
+                      </div>
+
+                    </div>
+                  </motion.div>
+                </TabsContent>
+              ))}
+            </Tabs>
+          </div>
+        </section>
+
+        {/* Supplement Section với Hình 4 */}
+        <section
+          id="supplement"
+          className="py-32 relative z-10 bg-fixed bg-center bg-cover"
+          style={{ backgroundImage: 'url("/images/Section4.png")' }}
+        >
+          <div className="absolute inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md -z-10" />
+
+          <div className="container mx-auto px-4 md:px-6 relative z-10">
             <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-8 md:mb-10">
-                <h2 className="text-4xl md:text-5xl font-serif italic mb-4">Mở rộng nội dung</h2>
-                <p className="max-w-2xl mx-auto text-base md:text-lg leading-7 md:leading-8 text-muted-foreground">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl md:text-5xl font-serif italic mb-4 text-white">Mở rộng nội dung</h2>
+                <p className="max-w-2xl mx-auto text-base md:text-lg leading-7 md:leading-8 text-white/70">
                   Chọn từng nội dung để xem nhanh các ý quan trọng về mục tiêu phát triển, cơ cấu sở hữu và quan hệ phân phối của mô hình kinh tế này.
                 </p>
               </div>
 
-              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3 items-start">
+              <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3 items-start">
                 {supplementItems.map((item) => {
                   const isOpen = expandedSupplement === item.id;
                   return (
@@ -1014,37 +948,31 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
                       key={item.id}
                       layout
                       onClick={() => setExpandedSupplement(isOpen ? null : item.id)}
-                      className="text-left h-full rounded-[2rem] border border-primary/10 bg-card p-6 shadow-lg shadow-primary/5 hover:border-primary/25 transition-colors"
+                      className="text-left h-full rounded-[2rem] border border-white/20 bg-white/10 dark:bg-zinc-900/50 backdrop-blur-md p-6 shadow-2xl hover:bg-white/20 transition-all"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                          <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-white shrink-0">
                             {item.icon}
                           </div>
                           <div>
-                            <h3 className="text-2xl font-serif leading-tight mb-2">{item.title}</h3>
-                            <p className="text-muted-foreground leading-7">{item.teaser}</p>
+                            <h3 className="text-2xl font-serif leading-tight mb-2 text-white">{item.title}</h3>
+                            <p className="text-white/80 leading-7 text-sm">{item.teaser}</p>
                           </div>
                         </div>
-                        <div className="mt-1 text-primary shrink-0">
+                        <div className="mt-1 text-white shrink-0">
                           <ChevronDown className={cn("w-5 h-5 transition-transform", isOpen && "rotate-180")} />
                         </div>
                       </div>
 
                       <AnimatePresence initial={false}>
                         {isOpen && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.22 }}
-                            className="overflow-hidden"
-                          >
-                            <Separator className="my-5" />
-                            <p className="leading-8 text-muted-foreground mb-4">{item.detail}</p>
+                          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.22 }} className="overflow-hidden text-white/90">
+                            <Separator className="my-5 bg-white/20" />
+                            <p className="leading-8 mb-4">{item.detail}</p>
                             <div className="grid gap-3">
                               {item.bullets.map((bullet, index) => (
-                                <div key={index} className="rounded-2xl border border-primary/10 bg-primary/[0.03] px-4 py-3 text-sm leading-6">
+                                <div key={index} className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3 text-sm leading-6">
                                   {bullet}
                                 </div>
                               ))}
@@ -1060,57 +988,65 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
           </div>
         </section>
 
-        <section id="flipbook" className="py-14 md:py-16 bg-gradient-to-b from-background via-secondary/10 to-background dark:from-zinc-950 dark:via-zinc-900/50 dark:to-zinc-950 relative overflow-hidden">
+        {/* Flipbook Section */}
+        <section id="flipbook" className="py-32 bg-gradient-to-b from-background via-secondary/10 to-background dark:from-zinc-950 dark:via-zinc-900/50 dark:to-zinc-950 relative overflow-hidden">
           <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.10),transparent_40%)]" />
           <div className="container mx-auto px-4 md:px-6">
             <div className="max-w-5xl mx-auto">
-              <div className="text-center mb-10">
-                <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/10 border-none rounded-full px-4">Flipbook</Badge>
-                <h2 className="text-4xl md:text-5xl mb-4 font-serif italic">FlipBook - Bài học thông qua câu chuyện</h2>
-                <p className="text-muted-foreground max-w-3xl mx-auto text-lg leading-8">
-                  Khu vực flipbook vẫn được giữ lại để bạn có thể thay thế nội dung truyện hoặc tài liệu kể chuyện ở bước tiếp theo mà không ảnh hưởng đến các chức năng khác của web.
+              <div className="text-center mb-16">
+                <Badge className="mb-4 bg-primary/10 text-primary hover:bg-primary/20 border-none rounded-full px-4">Flipbook tương tác</Badge>
+                <h2 className="text-4xl md:text-5xl mb-6 font-serif italic">FlipBook - Bài học qua câu chuyện</h2>
+                <p className="text-muted-foreground max-w-3xl mx-auto text-lg font-light leading-relaxed">
+                  Một phiên bản kể chuyện trực quan giúp người học tiếp cận các khái niệm kinh tế khô khan bằng hình ảnh, nhịp đọc và trải nghiệm lật trang tự nhiên.
                 </p>
               </div>
+
               <div className="rounded-[2rem] border border-primary/10 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md shadow-2xl shadow-primary/5 p-4 md:p-8">
                 <FlipBook />
               </div>
             </div>
           </div>
         </section>
+
       </main>
 
-      <footer className="py-14 border-t bg-white dark:bg-zinc-950 relative overflow-hidden">
+      {/* Footer */}
+      <footer className="py-20 border-t bg-white dark:bg-zinc-950 relative overflow-hidden">
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_bottom,var(--color-primary)_0%,transparent_70%)] opacity-[0.02]" />
         <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-5xl mx-auto flex flex-col items-center text-center gap-5">
-            <div className="flex items-center gap-3">
+          <div className="flex flex-col items-center text-center">
+            <div className="flex items-center gap-3 mb-8">
               <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20">
                 <BookOpen className="w-5 h-5 text-white" />
               </div>
               <span className="text-2xl font-serif font-bold tracking-tight">Chương 5 - MLN122</span>
             </div>
-            <nav className="flex flex-wrap justify-center gap-6">
+            <nav className="flex flex-wrap justify-center gap-8 mb-12">
               <a href="#overview" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Tổng quan</a>
               <a href="#topics" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Nội dung chính</a>
               <a href="#supplement" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Mở rộng</a>
               <a href="#flipbook" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Flipbook</a>
-              <button onClick={() => setIsChatOpen(true)} className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">AI Triết Học</button>
+              <button onClick={() => setIsChatOpen(true)} className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Trợ lý AI</button>
             </nav>
-            <p className="text-sm text-muted-foreground leading-6 max-w-2xl">
-              Nội dung trình bày tập trung đúng phạm vi Nhóm 5: khái niệm, tính tất yếu khách quan và đặc trưng của kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.
+            <Separator className="max-w-xs mx-auto mb-12 opacity-50" />
+            <p className="text-sm text-muted-foreground font-light italic max-w-2xl">
+               Nội dung trình bày tập trung đúng phạm vi Nhóm 5: khái niệm, tính tất yếu khách quan và đặc trưng của kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.
             </p>
           </div>
         </div>
       </footer>
 
+      {/* Chatbot Toggle Button */}
       <Button
         size="lg"
-        className="fixed bottom-6 right-6 h-14 px-6 rounded-full shadow-[0_0_20px_rgba(230,81,0,0.3)] z-50 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white flex items-center gap-2 transition-all duration-300 hover:scale-105"
+        className="fixed bottom-6 right-6 h-14 px-6 rounded-full shadow-[0_0_20px_rgba(230,81,0,0.5)] z-50 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white flex items-center gap-2 transition-all duration-300 hover:scale-105 animate-pulse"
         onClick={() => setIsChatOpen(true)}
       >
         <MessageSquare className="w-5 h-5" />
-        <span className="font-bold text-sm tracking-wide">AI Triết Học</span>
+        <span className="font-bold text-sm tracking-wide">AI Triết học</span>
       </Button>
 
+      {/* Chatbot Interface */}
       <AnimatePresence>
         {isChatOpen && (
           <motion.div
@@ -1131,16 +1067,18 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
                     </Avatar>
                   ) : (
                     <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-orange-500 to-red-500 flex items-center justify-center shadow-lg shadow-orange-200">
-                      <Bot className="w-6 h-6 text-white" />
+                      <MessageSquare className="w-6 h-6 text-white" />
                     </div>
                   )}
                   <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full" />
                 </div>
                 <div>
-                  <p className="font-serif font-bold text-lg leading-none mb-1 text-zinc-900 dark:text-zinc-100">AI Triết Học</p>
+                  <p className="font-serif font-bold text-lg leading-none mb-1 text-zinc-900 dark:text-zinc-100">
+                    Triết Học AI
+                  </p>
                   {user && (
                     <p className="text-[10px] text-orange-600 dark:text-orange-400 font-medium uppercase tracking-wider">
-                      Chào, {profile?.displayName || user.displayName?.split(" ")[0]}
+                      Chào, {profile?.displayName || user.displayName?.split(' ')[0]}
                     </p>
                   )}
                 </div>
@@ -1154,15 +1092,14 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
               <div className="space-y-6">
                 {messages.map((msg, idx) => (
                   <div key={idx} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                    <div
-                      className={`max-w-[85%] p-4 rounded-[1.5rem] text-sm leading-relaxed ${
-                        msg.role === "user"
-                          ? "bg-primary text-white dark:text-zinc-950 rounded-tr-none shadow-lg shadow-primary/20"
-                          : "bg-white dark:bg-card text-foreground rounded-tl-none shadow-sm border border-primary/5"
-                      }`}
-                    >
+                    <div className={`max-w-[85%] p-4 rounded-[1.5rem] text-sm leading-relaxed ${msg.role === "user"
+                      ? "bg-primary text-white dark:text-zinc-950 rounded-tr-none shadow-lg shadow-primary/20"
+                      : "bg-white dark:bg-card text-foreground rounded-tl-none shadow-sm border border-primary/5"
+                      }`}>
                       <div className={cn("prose prose-sm max-w-none", msg.role === "user" ? "prose-invert" : "prose-slate dark:prose-invert")}>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.text}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {msg.text}
+                        </ReactMarkdown>
                       </div>
                     </div>
                   </div>
@@ -1189,7 +1126,7 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
                 }}
               >
                 <Input
-                  placeholder="Nhập câu hỏi về mục 5.1..."
+                  placeholder="Nhập câu hỏi cho chatbot"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   className="flex-1 h-12 rounded-full px-6 bg-secondary/20 dark:bg-zinc-900 border-transparent focus-visible:ring-primary/20 focus-visible:border-primary/20 transition-all"
@@ -1199,68 +1136,21 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
                 </Button>
               </form>
               <p className="text-[10px] text-center text-muted-foreground mt-4 font-medium tracking-wide opacity-60">
-                Trả lời xoay quanh phần 5.1 kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam
+                Sử dụng trí tuệ nhân tạo để hỗ trợ học tập
               </p>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <Dialog open={isTopicDialogOpen} onOpenChange={setIsTopicDialogOpen}>
-        <DialogContent className="w-[95vw] max-w-3xl rounded-[2rem] p-0 overflow-hidden border border-primary/10">
-          <div className="border-b border-primary/10 bg-[linear-gradient(180deg,rgba(247,246,244,0.95),rgba(255,255,255,0.95))] dark:bg-[linear-gradient(180deg,rgba(36,36,40,1),rgba(24,24,27,1))] px-5 py-5 sm:px-7 sm:py-6">
-            <div className="flex items-start gap-4 pr-8">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary/10">
-                {activeTopicData.icon}
-              </div>
-              <div>
-                <DialogTitle className="font-serif text-xl sm:text-2xl leading-tight mb-2">{activeTopicData.title}</DialogTitle>
-                <DialogDescription className="text-sm sm:text-base leading-7 text-muted-foreground">
-                  {activeTopicData.subtitle}
-                </DialogDescription>
-              </div>
-            </div>
-          </div>
-
-          <div className="max-h-[75vh] overflow-y-auto px-4 py-4 sm:px-7 sm:py-6">
-            <div className="grid gap-4 sm:gap-5">
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {activeTopicData.highlights.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="rounded-2xl border border-primary/10 bg-primary/[0.03] px-4 py-3 text-sm leading-7 text-foreground/90 break-words"
-                  >
-                    {item}
-                  </div>
-                ))}
-              </div>
-
-              <div className="rounded-[1.5rem] border border-primary/10 bg-secondary/20 dark:bg-zinc-900/60 p-4 sm:p-5">
-                <p className="text-sm font-semibold mb-2">Tóm tắt nhanh</p>
-                <p className="text-sm sm:text-base text-muted-foreground leading-7 sm:leading-8">{activeTopicData.summary}</p>
-              </div>
-
-              <div className="rounded-[1.5rem] border border-primary/10 bg-white dark:bg-zinc-950 p-4 sm:p-5">
-                <p className="text-sm font-semibold mb-3">Nội dung chi tiết</p>
-                <div className="prose prose-slate dark:prose-invert max-w-none text-sm sm:text-base prose-headings:font-serif prose-headings:leading-tight prose-headings:mb-3 prose-p:my-3 prose-p:leading-7 sm:prose-p:leading-8 prose-ul:my-3 prose-ul:space-y-2 prose-li:leading-7 sm:prose-li:leading-8 prose-strong:text-foreground break-words">
-                  <ReactMarkdown>{activeTopicData.content}</ReactMarkdown>
-                </div>
-              </div>
-
-              <div className="rounded-[1.5rem] border border-accent/15 bg-accent/5 p-4 sm:p-5">
-                <p className="text-xs uppercase tracking-[0.18em] text-accent font-semibold mb-2">Ví dụ minh họa</p>
-                <p className="text-sm sm:text-base leading-7 sm:leading-8 text-foreground/90">{activeTopicData.example}</p>
-              </div>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
+      {/* Dialogs Profiling & Auth (Giữ nguyên) */}
       <Dialog open={isProfileDialogOpen} onOpenChange={setIsProfileDialogOpen}>
         <DialogContent className="sm:max-w-[425px] rounded-[2rem]">
           <DialogHeader>
             <DialogTitle className="font-serif text-2xl">Tùy chỉnh hồ sơ</DialogTitle>
-            <DialogDescription>Thay đổi tên hiển thị và ảnh đại diện của bạn.</DialogDescription>
+            <DialogDescription>
+              Thay đổi tên hiển thị và ảnh đại diện của bạn.
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-6 py-4">
             <div className="flex justify-center">
@@ -1280,7 +1170,9 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
                       const file = e.target.files?.[0];
                       if (file) {
                         const reader = new FileReader();
-                        reader.onloadend = () => setNewPhotoURL(reader.result as string);
+                        reader.onloadend = () => {
+                          setNewPhotoURL(reader.result as string);
+                        };
                         reader.readAsDataURL(file);
                       }
                     }}
@@ -1290,11 +1182,23 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
             </div>
             <div className="grid gap-2">
               <label htmlFor="name" className="text-sm font-medium px-1">Tên hiển thị</label>
-              <Input id="name" value={newDisplayName} onChange={(e) => setNewDisplayName(e.target.value)} placeholder="Nhập tên của bạn..." className="rounded-full h-12 bg-secondary/20 dark:bg-zinc-900 border-transparent focus-visible:ring-primary/20" />
+              <Input
+                id="name"
+                value={newDisplayName}
+                onChange={(e) => setNewDisplayName(e.target.value)}
+                placeholder="Nhập tên của bạn..."
+                className="rounded-full h-12 bg-secondary/20 dark:bg-zinc-900 border-transparent focus-visible:ring-primary/20"
+              />
             </div>
             <div className="grid gap-2">
               <label htmlFor="photo" className="text-sm font-medium px-1">URL Ảnh đại diện</label>
-              <Input id="photo" value={newPhotoURL} onChange={(e) => setNewPhotoURL(e.target.value)} placeholder="https://..." className="rounded-full h-12 bg-secondary/20 dark:bg-zinc-900 border-transparent focus-visible:ring-primary/20" />
+              <Input
+                id="photo"
+                value={newPhotoURL}
+                onChange={(e) => setNewPhotoURL(e.target.value)}
+                placeholder="https://..."
+                className="rounded-full h-12 bg-secondary/20 dark:bg-zinc-900 border-transparent focus-visible:ring-primary/20"
+              />
             </div>
           </div>
           <DialogFooter>
@@ -1306,18 +1210,14 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
         </DialogContent>
       </Dialog>
 
-      <Dialog
-        open={isAuthDialogOpen}
-        onOpenChange={(open) => {
-          setIsAuthDialogOpen(open);
-          if (!open) resetAuthForm();
-        }}
-      >
+      <Dialog open={isAuthDialogOpen} onOpenChange={(open) => { setIsAuthDialogOpen(open); if (!open) resetAuthForm(); }}>
         <DialogContent className="sm:max-w-[400px] rounded-[2rem] p-0 overflow-hidden border-none shadow-2xl">
           <div className="bg-primary p-8 text-white text-center">
-            <h2 className="text-3xl font-serif italic mb-2">{authMode === "login" ? "Chào mừng trở lại" : "Tham gia cùng chúng tôi"}</h2>
+            <h2 className="text-3xl font-serif italic mb-2">
+              {authMode === "login" ? "Chào mừng trở lại" : "Tham gia cùng chúng tôi"}
+            </h2>
             <p className="text-primary-foreground/80 text-sm">
-              {authMode === "login" ? "Đăng nhập để lưu lịch sử học tập và trò chuyện" : "Tạo tài khoản để đồng bộ trải nghiệm học tập"}
+              {authMode === "login" ? "Đăng nhập để tiếp tục hành trình học tập" : "Tạo tài khoản để lưu trữ lịch sử trò chuyện"}
             </p>
           </div>
 
@@ -1326,34 +1226,69 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
               {authMode === "register" && (
                 <div className="space-y-1">
                   <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Họ và tên</label>
-                  <Input value={registerName} onChange={(e) => setRegisterName(e.target.value)} placeholder="Nguyễn Văn A" className="rounded-xl h-12 bg-secondary/20 dark:bg-zinc-900 border-transparent focus-visible:ring-primary/20" required />
+                  <Input
+                    value={registerName}
+                    onChange={(e) => setRegisterName(e.target.value)}
+                    placeholder="Nguyễn Văn A"
+                    className="rounded-xl h-12 bg-secondary/20 dark:bg-zinc-900 border-transparent focus-visible:ring-primary/20"
+                    required
+                  />
                 </div>
               )}
 
               <div className="space-y-1">
                 <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Email</label>
-                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="email@example.com" className="rounded-xl h-12 bg-secondary/20 dark:bg-zinc-900 border-transparent focus-visible:ring-primary/20" required />
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="email@example.com"
+                  className="rounded-xl h-12 bg-secondary/20 dark:bg-zinc-900 border-transparent focus-visible:ring-primary/20"
+                  required
+                />
               </div>
 
               <div className="space-y-1">
                 <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Mật khẩu</label>
-                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="rounded-xl h-12 bg-secondary/20 dark:bg-zinc-900 border-transparent focus-visible:ring-primary/20" required />
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="rounded-xl h-12 bg-secondary/20 dark:bg-zinc-900 border-transparent focus-visible:ring-primary/20"
+                  required
+                />
               </div>
 
               {authMode === "register" && (
                 <div className="space-y-1">
                   <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground ml-1">Xác nhận mật khẩu</label>
-                  <Input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="••••••••" className="rounded-xl h-12 bg-secondary/20 dark:bg-zinc-900 border-transparent focus-visible:ring-primary/20" required />
+                  <Input
+                    type="password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="rounded-xl h-12 bg-secondary/20 dark:bg-zinc-900 border-transparent focus-visible:ring-primary/20"
+                    required
+                  />
                 </div>
               )}
 
-              {authError && <div className="rounded-xl bg-red-50 text-red-600 px-4 py-3 text-sm">{authError}</div>}
+              {authError && (
+                <p className="text-destructive text-xs font-medium bg-destructive/10 p-3 rounded-xl">
+                  {authError}
+                </p>
+              )}
 
               <Button type="submit" disabled={isAuthSubmitting} className="w-full h-12 rounded-xl text-base font-bold shadow-lg shadow-primary/20">
                 {isAuthSubmitting ? "Đang xử lý..." : authMode === "login" ? "Đăng nhập" : "Đăng ký"}
               </Button>
               {authMode === "login" && (
-                <button type="button" onClick={handleForgotPassword} className="w-full text-right text-xs font-medium text-primary hover:underline">
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  className="w-full text-right text-xs font-medium text-primary hover:underline"
+                >
                   Quên mật khẩu?
                 </button>
               )}
@@ -1368,12 +1303,29 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
               </div>
             </div>
 
-            <Button variant="outline" onClick={handleGoogleLogin} disabled={isAuthSubmitting} className="w-full h-12 rounded-xl border-secondary dark:border-zinc-800 hover:bg-secondary/10 flex items-center justify-center gap-3 font-medium">
+            <Button
+              variant="outline"
+              onClick={handleGoogleLogin}
+              disabled={isAuthSubmitting}
+              className="w-full h-12 rounded-xl border-secondary dark:border-zinc-800 hover:bg-secondary/10 flex items-center justify-center gap-3 font-medium"
+            >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                <path
+                  fill="currentColor"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                />
+                <path
+                  fill="currentColor"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                />
+                <path
+                  fill="currentColor"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+                />
+                <path
+                  fill="currentColor"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+                />
               </svg>
               Tiếp tục với Google
             </Button>
@@ -1382,14 +1334,20 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
               {authMode === "login" ? (
                 <>
                   Chưa có tài khoản?{" "}
-                  <button onClick={() => { setAuthMode("register"); setAuthError(""); }} className="text-primary font-bold hover:underline">
+                  <button
+                    onClick={() => { setAuthMode("register"); setAuthError(""); }}
+                    className="text-primary font-bold hover:underline"
+                  >
                     Đăng ký ngay
                   </button>
                 </>
               ) : (
                 <>
                   Đã có tài khoản?{" "}
-                  <button onClick={() => { setAuthMode("login"); setAuthError(""); }} className="text-primary font-bold hover:underline">
+                  <button
+                    onClick={() => { setAuthMode("login"); setAuthError(""); }}
+                    className="text-primary font-bold hover:underline"
+                  >
                     Đăng nhập
                   </button>
                 </>
