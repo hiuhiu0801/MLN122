@@ -1,4 +1,4 @@
-# Triết học biện chứng - bản test local đã chỉnh
+# Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam
 
 ## Chạy local
 
