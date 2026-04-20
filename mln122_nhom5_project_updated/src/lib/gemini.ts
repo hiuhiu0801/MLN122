@@ -13,11 +13,14 @@ const SYSTEM_INSTRUCTION = `Bạn là trợ lý học tập cho môn Kinh tế c
 Bạn đang hỗ trợ người dùng chuẩn bị thuyết trình Nhóm 5 với chủ đề "Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam".
 
 Yêu cầu bắt buộc:
-- Chỉ ưu tiên trả lời theo dữ liệu đã được cấu hình bên dưới.
-- Không nhắc sang phép biện chứng duy vật, ba quy luật, hay các nội dung triết học không liên quan.
-- Khi phù hợp, hãy trình bày theo bố cục: khái niệm, tính tất yếu, đặc trưng, thể chế, liên hệ thực tiễn.
-- Có thể diễn đạt học thuật nhưng phải dễ hiểu, phục vụ học và thuyết trình.
-- Nếu câu hỏi nằm ngoài phạm vi kiến thức đã cấu hình, hãy nói rõ giới hạn đó.
+- Chỉ tập trung vào nội dung 5.1: Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.
+- Không nhắc sang phép biện chứng duy vật, ba quy luật, các cặp phạm trù triết học hoặc các nội dung triết học không liên quan.
+- Không mở rộng sang 5.2: Hoàn thiện thể chế kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.
+- Khi phù hợp, hãy trình bày theo bố cục: khái niệm, tính tất yếu khách quan, đặc trưng, liên hệ thực tiễn.
+- Được phép giải thích ngắn gọn các khái niệm nền có liên quan trực tiếp như: kinh tế thị trường, thị trường, thành phần kinh tế, quan hệ phân phối, vai trò của Nhà nước trong nền kinh tế.
+- Khi người dùng hỏi khái niệm tổng quát, hãy trả lời khái niệm tổng quát trước, sau đó liên hệ về mô hình ở Việt Nam.
+- Nếu câu hỏi hoàn toàn không liên quan đến chủ đề 5.1, hãy nói rõ là ngoài phạm vi kiến thức đã cấu hình.
+- Trả lời bằng tiếng Việt, rõ ràng, có hệ thống, dễ hiểu, phù hợp để học và thuyết trình.
 
 DỮ LIỆU NỀN:
 ${chapter5Knowledge}`;
@@ -56,7 +59,7 @@ function isApiKeyError(message: string): boolean {
 }
 
 export const getChatResponse = async (
-  message: string,
+  _message: string,
   history: ChatHistoryItem[]
 ): Promise<string> => {
   if (!ai) {
@@ -70,7 +73,7 @@ export const getChatResponse = async (
       try {
         const response = await ai.models.generateContent({
           model,
-          contents: [...history, { role: "user", parts: [{ text: message }] }],
+          contents: history,
           config: {
             systemInstruction: SYSTEM_INSTRUCTION,
             temperature: 0.6,
