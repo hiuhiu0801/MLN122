@@ -118,12 +118,7 @@ const STRUCTURE_ITEMS = [
   {
     id: "dac-trung",
     title: "Đặc trưng",
-    desc: "Trình bày các đặc trưng về mục tiêu, sở hữu, quản lý, phân phối và gắn tăng trưởng với công bằng xã hội.",
-  },
-  {
-    id: "the-che",
-    title: "Hoàn thiện thể chế",
-    desc: "Nêu khái niệm thể chế, sự cần thiết phải hoàn thiện và các nội dung hoàn thiện ở Việt Nam.",
+    desc: "Trình bày các đặc trưng về mục tiêu, sở hữu, quản lý, phân phối và gắn tăng trưởng kinh tế với tiến bộ, công bằng xã hội.",
   },
 ];
 
@@ -169,7 +164,7 @@ export default function App() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "model",
-      text: "Xin chào! Tôi là trợ lý AI của Chương 5. Tôi có thể hỗ trợ bạn về khái niệm, tính tất yếu khách quan, đặc trưng và hoàn thiện thể chế của kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.",
+      text: "Xin chào! Tôi là trợ lý AI của Chương 5. Tôi có thể hỗ trợ bạn về khái niệm, tính tất yếu khách quan và đặc trưng của kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.",
     },
   ]);
   const [inputValue, setInputValue] = useState("");
@@ -223,7 +218,7 @@ export default function App() {
   const getDefaultWelcomeMessage = (): Message[] => [
     {
       role: "model",
-      text: "Xin chào! Tôi là trợ lý AI của Chương 5. Hãy hỏi tôi về mô hình kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.",
+      text: "Xin chào! Tôi là trợ lý AI của Chương 5. Hãy hỏi tôi về khái niệm, tính tất yếu khách quan và đặc trưng của kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.",
     },
   ];
 
@@ -492,12 +487,12 @@ Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam
 
 **Những điểm cần nắm**
 
-- Đây không phải là phủ nhận kinh tế thị trường, mà là **sử dụng kinh tế thị trường như một công cụ phát triển**.
-- Mô hình này vừa có **đặc trưng của kinh tế thị trường nói chung**, vừa có **định hướng xã hội chủ nghĩa phù hợp với điều kiện Việt Nam**.
-- Trọng tâm của định hướng là phát triển kinh tế đi đôi với tiến bộ, công bằng xã hội.
+- Đây là mô hình **không phủ nhận kinh tế thị trường**, mà sử dụng kinh tế thị trường như một công cụ để phát triển đất nước.
+- Mô hình này vừa mang **đặc trưng của kinh tế thị trường nói chung**, vừa thể hiện **định hướng xã hội chủ nghĩa phù hợp với điều kiện Việt Nam**.
+- Bản chất của định hướng là phát triển kinh tế gắn với mục tiêu tiến bộ, công bằng xã hội và nâng cao đời sống nhân dân.
       `,
       example:
-        "Ví dụ trong thực tiễn, nền kinh tế vẫn có nhiều chủ thể cạnh tranh, nhiều hình thức sở hữu, nhưng Nhà nước định hướng phát triển bằng pháp luật, chiến lược, chính sách và an sinh xã hội.",
+        "Trong thực tiễn, nền kinh tế vẫn có nhiều chủ thể cạnh tranh, nhiều hình thức sở hữu, nhưng Nhà nước định hướng phát triển bằng pháp luật, chiến lược, chính sách và an sinh xã hội.",
       imagePrompt:
         "Educational illustration about Vietnam socialist-oriented market economy, balance between market dynamics, state regulation, social welfare, academic infographic style, bright warm colors.",
     },
@@ -519,14 +514,14 @@ Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam
 
 - **Thứ nhất, phù hợp với quy luật phát triển khách quan.** Trong điều kiện hội nhập và phát triển hiện nay, kinh tế thị trường là hình thức tổ chức kinh tế có khả năng huy động nguồn lực và thúc đẩy phân công lao động xã hội.
 - **Thứ hai, mô hình này phát huy ưu thế của kinh tế thị trường.** Kinh tế thị trường tạo động lực cạnh tranh, khuyến khích đổi mới sáng tạo, nâng cao năng suất lao động và hiệu quả phân bổ nguồn lực.
-- **Thứ ba, phù hợp với mục tiêu phát triển của Việt Nam.** Việt Nam không chỉ hướng tới tăng trưởng kinh tế, mà còn hướng tới tiến bộ và công bằng xã hội, nâng cao đời sống nhân dân.
+- **Thứ ba, mô hình này phù hợp với nguyện vọng của nhân dân Việt Nam.** Việt Nam hướng tới mục tiêu dân giàu, nước mạnh, dân chủ, công bằng, văn minh; vì vậy cần một mô hình vừa thúc đẩy tăng trưởng vừa bảo đảm định hướng xã hội.
 
-**Ý nghĩa cần rút ra**
+**Ý nghĩa rút ra**
 
-Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết quả của quá trình nhận thức và vận dụng quy luật phát triển vào điều kiện cụ thể của Việt Nam**.
+Việc lựa chọn mô hình này là **kết quả của quá trình nhận thức và vận dụng quy luật phát triển vào điều kiện cụ thể của Việt Nam**, chứ không phải sự lựa chọn ngẫu nhiên.
       `,
       example:
-        "Khi kinh tế vận hành theo cơ chế thị trường, doanh nghiệp có động lực cạnh tranh và đổi mới; đồng thời Nhà nước can thiệp để định hướng phát triển, bảo đảm an sinh và công bằng xã hội.",
+        "Khi kinh tế vận hành theo cơ chế thị trường, doanh nghiệp có động lực cạnh tranh và đổi mới; đồng thời Nhà nước định hướng để bảo đảm ổn định kinh tế vĩ mô và mục tiêu xã hội.",
       imagePrompt:
         "Academic visual showing objective necessity of socialist oriented market economy in Vietnam, growth, people welfare, market and state balance, infographic style.",
     },
@@ -537,7 +532,7 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
       subtitle: "Bao hàm đặc trưng của kinh tế thị trường nói chung và nét đặc thù của Việt Nam.",
       icon: <Layers className="w-6 h-6 text-accent" />,
       summary:
-        "Nền kinh tế này có 5 nhóm đặc trưng tiêu biểu: mục tiêu phát triển, quan hệ sở hữu và thành phần kinh tế, quan hệ quản lý nền kinh tế, quan hệ phân phối, và gắn tăng trưởng kinh tế với tiến bộ, công bằng xã hội.",
+        "Nền kinh tế này có các đặc trưng tiêu biểu về mục tiêu phát triển, quan hệ sở hữu và thành phần kinh tế, quan hệ quản lý nền kinh tế, quan hệ phân phối và gắn tăng trưởng kinh tế với tiến bộ, công bằng xã hội.",
       highlights: [
         "Mục tiêu hướng tới phát triển lực lượng sản xuất và nâng cao đời sống nhân dân.",
         "Nhiều hình thức sở hữu, nhiều thành phần kinh tế; kinh tế nhà nước giữ vai trò chủ đạo, kinh tế tư nhân là động lực quan trọng.",
@@ -549,52 +544,13 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
 - **Về mục tiêu:** Hướng tới phát triển lực lượng sản xuất, xây dựng cơ sở vật chất - kỹ thuật của chủ nghĩa xã hội, nâng cao đời sống nhân dân, thực hiện mục tiêu dân giàu, nước mạnh, dân chủ, công bằng, văn minh.
 - **Về quan hệ sở hữu và thành phần kinh tế:** Có nhiều hình thức sở hữu, nhiều thành phần kinh tế; trong đó **kinh tế nhà nước giữ vai trò chủ đạo**, **kinh tế tư nhân là một động lực quan trọng**.
 - **Về quan hệ quản lý nền kinh tế:** Nhà nước pháp quyền xã hội chủ nghĩa quản lý nền kinh tế dưới sự lãnh đạo của Đảng Cộng sản Việt Nam, có sự làm chủ và giám sát của nhân dân.
-- **Về quan hệ phân phối:** Thực hiện nhiều hình thức phân phối, trong đó phân phối theo lao động và hiệu quả kinh tế là quan trọng, đồng thời thông qua phúc lợi xã hội.
+- **Về quan hệ phân phối:** Thực hiện nhiều hình thức phân phối, trong đó phân phối theo lao động và hiệu quả kinh tế là chủ yếu, đồng thời thông qua phúc lợi xã hội.
 - **Về quan hệ giữa tăng trưởng kinh tế và công bằng xã hội:** Phát triển kinh tế đi đôi với tiến bộ và công bằng xã hội ngay trong từng bước, từng chính sách phát triển.
       `,
       example:
         "Trong thực tiễn Việt Nam, cùng với doanh nghiệp nhà nước còn có doanh nghiệp tư nhân, hợp tác xã, doanh nghiệp có vốn đầu tư nước ngoài; Nhà nước định hướng bằng chính sách, pháp luật và các chương trình an sinh.",
       imagePrompt:
         "Clean academic infographic summarizing characteristics of Vietnam socialist oriented market economy: goals, ownership, management, distribution, social justice, bright educational design.",
-    },
-    {
-      id: "topic-4",
-      shortTitle: "Thể chế",
-      title: "Hoàn thiện thể chế kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam",
-      subtitle: "Trọng tâm là hoàn thiện đồng bộ hệ thống thể chế để mô hình vận hành hiệu quả hơn.",
-      icon: <Wallet className="w-6 h-6 text-accent" />,
-      summary:
-        "Cần làm rõ khái niệm thể chế, lý do phải hoàn thiện thể chế và các nội dung hoàn thiện như sở hữu, thành phần kinh tế, thị trường, gắn tăng trưởng với công bằng xã hội, hội nhập quốc tế và năng lực quản lý nhà nước.",
-      highlights: [
-        "Thể chế là hệ thống quy tắc, pháp luật, bộ máy và cơ chế vận hành điều chỉnh hoạt động kinh tế.",
-        "Cần hoàn thiện vì thể chế còn chưa đồng bộ, chưa đầy đủ và hiệu lực, hiệu quả còn hạn chế.",
-        "Nội dung hoàn thiện trải rộng từ sở hữu, thị trường đến hội nhập và quản lý nhà nước.",
-      ],
-      content: `
-**Khái niệm thể chế**
-
-- **Thể chế** là những quy tắc, pháp luật, bộ máy và cơ chế vận hành nhằm điều chỉnh các hoạt động của con người trong một chế độ xã hội.
-- **Thể chế kinh tế** là hệ thống quy tắc, pháp luật, bộ máy quản lý và cơ chế vận hành nhằm điều chỉnh hành vi của các chủ thể kinh tế, các hoạt động sản xuất kinh doanh và quan hệ kinh tế quốc tế.
-- **Thể chế kinh tế thị trường định hướng xã hội chủ nghĩa** là hệ thống đường lối, chủ trương chiến lược, hệ thống luật pháp, chính sách quy định, xác lập cơ chế vận hành và điều chỉnh hoạt động của các chủ thể kinh tế theo định hướng xã hội chủ nghĩa.
-
-**Vì sao phải hoàn thiện thể chế?**
-
-- Thể chế còn **chưa đồng bộ**.
-- Hệ thống thể chế **chưa đầy đủ**.
-- Hiệu lực, hiệu quả còn hạn chế; còn thiếu các yếu tố thị trường và các loại thị trường phát triển đồng bộ.
-
-**Những nội dung cần hoàn thiện**
-
-- Hoàn thiện thể chế về **sở hữu và các thành phần kinh tế**.
-- Phát triển đồng bộ **các yếu tố thị trường và các loại thị trường**.
-- Gắn **tăng trưởng kinh tế với tiến bộ, công bằng xã hội**.
-- Đẩy mạnh **hội nhập kinh tế quốc tế**.
-- Nâng cao **năng lực quản lý của Nhà nước**.
-      `,
-      example:
-        "Ví dụ, để thị trường vận hành lành mạnh thì cần luật pháp rõ ràng về cạnh tranh, đầu tư, tài chính, đất đai, cùng với bộ máy quản lý đủ năng lực và trách nhiệm giải trình.",
-      imagePrompt:
-        "Professional educational infographic about improving institutions of socialist oriented market economy in Vietnam, law, state management, markets, integration, academic style.",
     },
   ]);
 
@@ -609,7 +565,7 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
       bullets: [
         "Phát triển lực lượng sản xuất.",
         "Nâng cao đời sống nhân dân.",
-        "Gắn kinh tế với mục tiêu phát triển xã hội lâu dài.",
+        "Gắn tăng trưởng kinh tế với mục tiêu phát triển xã hội lâu dài.",
       ],
     },
     {
@@ -636,19 +592,6 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
         "Phân phối theo lao động và hiệu quả kinh tế.",
         "Phân phối qua phúc lợi xã hội.",
         "Gắn tăng trưởng với tiến bộ, công bằng xã hội.",
-      ],
-    },
-    {
-      id: "supp-4",
-      title: "Định hướng hoàn thiện thể chế",
-      teaser: "Hoàn thiện đồng bộ từ luật pháp, thị trường đến năng lực quản lý nhà nước.",
-      icon: <Zap className="w-5 h-5" />,
-      detail:
-        "Việc hoàn thiện thể chế phải đồng bộ và toàn diện. Không chỉ sửa đổi luật pháp, mà còn phải hoàn thiện cơ chế vận hành, phát triển đồng bộ các loại thị trường, nâng cao chất lượng quản trị quốc gia, đẩy mạnh hội nhập kinh tế quốc tế và bảo đảm định hướng xã hội chủ nghĩa trong toàn bộ quá trình phát triển.",
-      bullets: [
-        "Hoàn thiện sở hữu và thành phần kinh tế.",
-        "Phát triển đồng bộ các loại thị trường.",
-        "Nâng cao hiệu lực, hiệu quả quản lý nhà nước.",
       ],
     },
   ];
@@ -793,20 +736,20 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
                   Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam
                 </h1>
                 <p className="text-lg md:text-xl text-muted-foreground leading-relaxed mb-7 max-w-3xl">
-                  Một bản web học tập tập trung vào đúng phạm vi phần nhóm 5: khái niệm, tính tất yếu khách quan, đặc trưng và hoàn thiện thể chế của mô hình kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.
+                  Một bản web học tập tập trung đúng phạm vi phần Nhóm 5: khái niệm, tính tất yếu khách quan và đặc trưng của kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.
                 </p>
                 <div className="grid sm:grid-cols-3 gap-3 mb-7">
                   <div className="rounded-2xl border border-primary/10 bg-primary/[0.03] p-4">
                     <p className="text-[11px] uppercase tracking-[0.18em] text-primary font-semibold mb-2">Phạm vi</p>
-                    <p className="text-sm leading-6">Nội dung triết học liên quan tới bộ môn MLN122 dựa vào giáo trình</p>
+                    <p className="text-sm leading-6">Nội dung về Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam theo giáo trình Triết Học FPT</p>
                   </div>
                   <div className="rounded-2xl border border-primary/10 bg-primary/[0.03] p-4">
                     <p className="text-[11px] uppercase tracking-[0.18em] text-primary font-semibold mb-2">Tương tác</p>
-                    <p className="text-sm leading-6">Có tab nội dung chính, mục mở rộng bấm để xem thêm, chatbot và flipbook.</p>
+                    <p className="text-sm leading-6">Có các tab nội dung chính, mục mở rộng bấm để xem thêm, chatbot và flipbook.</p>
                   </div>
                   <div className="rounded-2xl border border-primary/10 bg-primary/[0.03] p-4">
                     <p className="text-[11px] uppercase tracking-[0.18em] text-primary font-semibold mb-2">Trình bày</p>
-                    <p className="text-sm leading-6">Nội dung hiển thị đầy đủ và dễ học.</p>
+                    <p className="text-sm leading-6">Bố cục gọn, nội dung tóm gọn dễ học.</p>
                   </div>
                 </div>
                 <div className="flex flex-wrap gap-4">
@@ -814,7 +757,7 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
                     Xem nội dung chính <ArrowRight className="ml-2 w-4 h-4" />
                   </a>
                   <Button variant="outline" size="lg" className="rounded-full px-8" onClick={() => setIsChatOpen(true)}>
-                    AI Triết Học
+                    AI Chương 5
                   </Button>
                 </div>
               </div>
@@ -892,13 +835,13 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
                 <div className="overflow-hidden rounded-[1.75rem] border border-primary/10 mb-6">
                   <img src={FEATURE_IMAGES.hero} alt="Không gian đọc tài liệu" className="h-60 md:h-72 w-full object-cover" />
                 </div>
-                <h3 className="text-2xl md:text-3xl font-serif italic mb-4">4 mảng kiến thức chính cần nắm</h3>
+                <h3 className="text-2xl md:text-3xl font-serif italic mb-4">3 mảng kiến thức chính cần nắm</h3>
                 <div className="grid gap-3">
                   {STRUCTURE_ITEMS.map((item, index) => (
                     <div key={item.id} className="rounded-2xl border border-primary/10 bg-background px-4 py-4">
                       <div className="flex items-center justify-between gap-3 mb-1">
                         <p className="font-semibold">{index + 1}. {item.title}</p>
-                        <Badge variant="secondary" className="rounded-full">{item.id === "khai-niem" ? "Cốt lõi" : "Chi tiết"}</Badge>
+                        <Badge variant="secondary" className="rounded-full">{item.id === "khai-niem" ? "Cốt lõi" : "Trọng tâm"}</Badge>
                       </div>
                       <p className="text-sm text-muted-foreground leading-6">{item.desc}</p>
                     </div>
@@ -912,15 +855,15 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
         <section id="topics" className="py-14 md:py-16 bg-[linear-gradient(180deg,rgba(247,246,244,0.9),rgba(242,239,235,0.75))] dark:bg-[linear-gradient(180deg,rgba(24,24,27,1),rgba(20,20,23,1))]">
           <div className="container mx-auto px-4 md:px-6">
             <div className="max-w-6xl mx-auto text-center mb-10 md:mb-12">
-              <h2 className="text-4xl md:text-5xl font-serif italic mb-4">Nội dung trọng tâm của Chương 5</h2>
+              <h2 className="text-4xl md:text-5xl font-serif italic mb-4">Nội dung trọng tâm</h2>
               <div className="w-20 h-1 bg-primary rounded-full mx-auto mb-4" />
               <p className="max-w-3xl mx-auto text-muted-foreground text-lg leading-8">
-                Bốn khối nội dung dưới đây được trình bày đầy đủ theo đúng phạm vi phần thuyết trình: khái niệm, tính tất yếu khách quan, đặc trưng và hoàn thiện thể chế.
+                Ba khối nội dung dưới đây được trình bày đúng phạm vi phần thuyết trình của Nhóm 5: khái niệm, tính tất yếu khách quan và đặc trưng của mô hình kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.
               </p>
             </div>
 
             <Tabs value={activeTopic} onValueChange={setActiveTopic} className="w-full max-w-6xl mx-auto">
-              <TabsList className="grid grid-cols-2 md:grid-cols-4 h-auto p-2 gap-2 bg-white/80 dark:bg-zinc-900/80 rounded-2xl border border-primary/10 mb-6 md:mb-8">
+              <TabsList className="grid grid-cols-3 h-auto max-w-[680px] mx-auto p-2 gap-2 bg-white/80 dark:bg-zinc-900/80 rounded-2xl border border-primary/10 mb-6 md:mb-8">
                 {topics.map((topic) => (
                   <TabsTrigger key={topic.id} value={topic.id} className="rounded-xl py-3 data-[state=active]:shadow-lg data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-800">
                     {topic.shortTitle}
@@ -929,7 +872,7 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
               </TabsList>
 
               {topics.map((topic) => (
-                <TabsContent key={topic.id} value={topic.id} className="mt-0" id={topic.id === "topic-1" ? "khai-niem" : topic.id === "topic-2" ? "tinh-tat-yeu" : topic.id === "topic-3" ? "dac-trung" : "the-che"}>
+                <TabsContent key={topic.id} value={topic.id} className="mt-0" id={topic.id === "topic-1" ? "khai-niem" : topic.id === "topic-2" ? "tinh-tat-yeu" : "dac-trung"}>
                   <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} className="grid lg:grid-cols-[0.95fr_1.05fr] gap-6">
                     <div className="rounded-[2rem] border border-primary/10 bg-white dark:bg-zinc-950 shadow-xl shadow-primary/5 p-6 md:p-8 flex flex-col gap-6">
                       <div className="w-14 h-14 rounded-3xl bg-primary/10 flex items-center justify-center">{topic.icon}</div>
@@ -993,14 +936,14 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
         <section id="supplement" className="py-14 md:py-16 bg-background">
           <div className="container mx-auto px-4 md:px-6">
             <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-10">
+              <div className="text-center mb-8 md:mb-10">
                 <h2 className="text-4xl md:text-5xl font-serif italic mb-4">Mở rộng nội dung</h2>
-                <p className="max-w-3xl mx-auto text-lg leading-8 text-muted-foreground">
-                  Nhấn vào từng khối để xem thêm nội dung chi tiết. Phần này giúp người dùng đọc sâu hơn mà không làm giao diện chính bị rối.
+                <p className="max-w-2xl mx-auto text-base md:text-lg leading-7 md:leading-8 text-muted-foreground">
+                  Chọn từng nội dung để xem nhanh các ý quan trọng về mục tiêu phát triển, cơ cấu sở hữu và quan hệ phân phối của mô hình kinh tế này.
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-5">
+              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3 items-start">
                 {supplementItems.map((item) => {
                   const isOpen = expandedSupplement === item.id;
                   return (
@@ -1008,7 +951,7 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
                       key={item.id}
                       layout
                       onClick={() => setExpandedSupplement(isOpen ? null : item.id)}
-                      className="text-left rounded-[2rem] border border-primary/10 bg-card p-6 shadow-lg shadow-primary/5 hover:border-primary/25 transition-colors"
+                      className="text-left h-full rounded-[2rem] border border-primary/10 bg-card p-6 shadow-lg shadow-primary/5 hover:border-primary/25 transition-colors"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex items-start gap-4">
@@ -1087,10 +1030,10 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
               <a href="#topics" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Nội dung chính</a>
               <a href="#supplement" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Mở rộng</a>
               <a href="#flipbook" className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">Flipbook</a>
-              <button onClick={() => setIsChatOpen(true)} className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">AI Triết Học</button>
+              <button onClick={() => setIsChatOpen(true)} className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors">AI Chương 5</button>
             </nav>
             <p className="text-sm text-muted-foreground leading-6 max-w-2xl">
-              Nội dung trình bày tập trung vào kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam và hoàn thiện thể chế của mô hình này.
+              Nội dung trình bày tập trung đúng phạm vi Nhóm 5: khái niệm, tính tất yếu khách quan và đặc trưng của kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam.
             </p>
           </div>
         </div>
@@ -1102,7 +1045,7 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
         onClick={() => setIsChatOpen(true)}
       >
         <MessageSquare className="w-5 h-5" />
-        <span className="font-bold text-sm tracking-wide">AI Triết Học</span>
+        <span className="font-bold text-sm tracking-wide">AI Chương 5</span>
       </Button>
 
       <AnimatePresence>
@@ -1131,7 +1074,7 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
                   <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-white rounded-full" />
                 </div>
                 <div>
-                  <p className="font-serif font-bold text-lg leading-none mb-1 text-zinc-900 dark:text-zinc-100">AI Triết Học</p>
+                  <p className="font-serif font-bold text-lg leading-none mb-1 text-zinc-900 dark:text-zinc-100">AI Chương 5</p>
                   {user && (
                     <p className="text-[10px] text-orange-600 dark:text-orange-400 font-medium uppercase tracking-wider">
                       Chào, {profile?.displayName || user.displayName?.split(" ")[0]}
@@ -1183,7 +1126,7 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
                 }}
               >
                 <Input
-                  placeholder="Nhập câu hỏi về Chương 5..."
+                  placeholder="Nhập câu hỏi về mục 5.1..."
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   className="flex-1 h-12 rounded-full px-6 bg-secondary/20 dark:bg-zinc-900 border-transparent focus-visible:ring-primary/20 focus-visible:border-primary/20 transition-all"
@@ -1193,7 +1136,7 @@ Việc lựa chọn mô hình này không phải ngẫu nhiên mà là **kết q
                 </Button>
               </form>
               <p className="text-[10px] text-center text-muted-foreground mt-4 font-medium tracking-wide opacity-60">
-                Trả lời xoay quanh kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam
+                Trả lời xoay quanh phần 5.1 kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam
               </p>
             </div>
           </motion.div>
