@@ -11,17 +11,17 @@ const PAGE_RATIO = 1.5;
 const AUDIO_END_OFFSETS_MS = [
   0, // cover_start
   0,    // page1
-  4200, // page2
+  0, // page2
   0,    // page3
-  4750, // page4
+  0, // page4
   0,    // page5
-  4050, // page6
+  0, // page6
   0,    // page7
-  3700, // page8
+  5400, // page8
   0,    // page9
-  4000, // page10
+  0, // page10
   0,    // page11
-  4100, // page12
+  0, // page12
   0,    // cover_end = page13.mp3
 ];
 
@@ -43,20 +43,20 @@ const DEFAULT_PAGES = [
 ];
 
 const DEFAULT_STORY_TEXTS = [
-  "Flipbook mở đầu cho hành trình khám phá ba quy luật cơ bản của phép biện chứng duy vật qua câu chuyện trực quan và dễ ghi nhớ.",
-  "Minh và Lan cùng bắt đầu một dự án học tập, từ đó mở ra những khác biệt trong cách tiếp cận tri thức và hành động.",
-  "Sự đối lập giữa hai cách làm dần xuất hiện, tạo nên động lực phát triển và thay đổi trong nhận thức.",
-  "Mỗi lựa chọn nhỏ tích lũy theo thời gian đều chuẩn bị cho một bước chuyển lớn hơn về chất.",
-  "Những biểu hiện bề ngoài có thể gây ấn tượng ban đầu, nhưng chiều sâu nội dung mới quyết định giá trị bền vững.",
-  "Quá trình va chạm giữa các mặt khác nhau làm nảy sinh thay đổi, đúng tinh thần quy luật mâu thuẫn.",
-  "Sự kiên trì tích lũy từng yếu tố nhỏ cho thấy quy luật lượng – chất đang âm thầm vận động.",
-  "Mỗi điều chỉnh sau va vấp không phải mất mát đơn thuần, mà là một lần vượt bỏ để tiến lên trình độ mới.",
-  "Đến giai đoạn then chốt, sự khác biệt tích lũy đủ nhiều sẽ chuyển thành kết quả rõ rệt.",
-  "Khả năng chỉ thành hiện thực khi được nuôi dưỡng bằng hành động và phương pháp đúng đắn.",
-  "Thành công hay thất bại đều gắn với nguyên nhân sâu xa, không chỉ do ngẫu nhiên trước mắt.",
-  "Sự trưởng thành đến từ việc biết dung hòa, kế thừa và vượt lên, thay vì phủ định sạch trơn.",
-  "Câu chuyện khép lại bằng một bước phát triển mới, nơi cái mới hình thành trên cơ sở chọn lọc từ cái cũ.",
-  "Flipbook kết thúc, nhưng ba quy luật cơ bản vẫn tiếp tục hiện diện trong học tập, tư duy và đời sống hằng ngày.",
+  "Mở đầu câu chuyện về một xóm chợ nhỏ vượt qua đại dịch COVID-19.",
+  "Giới thiệu khung cảnh xóm chợ bình yên, buôn bán nhộn nhịp hằng ngày.",
+  "Bữa cơm gia đình no đủ nhờ hàng hóa dồi dào và giá cả ổn định.",
+  "Đại dịch bất ngờ ập đến, làm đảo lộn toàn bộ nhịp sống xóm chợ.",
+  "Cung giảm, cầu tăng mạnh, thị trường bắt đầu mất cân đối.",
+  "Giá cả hàng thiết yếu leo thang khi cầu vượt quá cung.",
+  "Người dân đối mặt với khó khăn kép: mất thu nhập và bão giá.",
+  "Nhà nước xuất hiện kịp thời để can thiệp và hỗ trợ người dân.",
+  "Nguồn gạo dự trữ quốc gia được xuất cấp để bình ổn đời sống.",
+  "Chính sách giảm thuế VAT được áp dụng để hỗ trợ sản xuất và tiêu dùng.",
+  "An sinh xã hội được tăng cường qua hỗ trợ thẻ bảo hiểm y tế.",
+  "Trẻ em được chăm sóc y tế miễn phí, thể hiện tính nhân văn của chính sách.",
+  "Xóm chợ dần ổn định trở lại nhờ sự điều tiết và tinh thần sẻ chia.",
+  "Khép lại câu chuyện với bài học về kinh tế thị trường định hướng xã hội chủ nghĩa.",
 ];
 
 const DEFAULT_AUDIO_FILES = [
@@ -122,16 +122,16 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
     setIsPlaying?.(false);
   };
 
-const getFlipDelayFromAudio = (audio, pageIndex) => {
-  if (!audio || !Number.isFinite(audio.duration) || audio.duration <= 0) {
-    return 2500;
-  }
+  const getFlipDelayFromAudio = (audio, pageIndex) => {
+    if (!audio || !Number.isFinite(audio.duration) || audio.duration <= 0) {
+      return 2500;
+    }
 
-  const endOffset = AUDIO_END_OFFSETS_MS[pageIndex] ?? 0;
-  const delay = Math.floor(audio.duration * 1000) - endOffset;
+    const endOffset = AUDIO_END_OFFSETS_MS[pageIndex] ?? 0;
+    const delay = Math.floor(audio.duration * 1000) - endOffset;
 
-  return Math.max(delay, 100);
-};
+    return Math.max(delay, 100);
+  };
 
   const waitForAudioMetadata = (audio) =>
     new Promise((resolve) => {
@@ -166,15 +166,15 @@ const getFlipDelayFromAudio = (audio, pageIndex) => {
       audio.addEventListener("error", handleError, { once: true });
     });
 
-const scheduleNextFlip = (delayMs, pageIndex) => {
-  clearAutoPlayTimer();
+  const scheduleNextFlip = (delayMs, pageIndex) => {
+    clearAutoPlayTimer();
 
-  if (pageIndex >= pages.length - 1) return;
+    if (pageIndex >= pages.length - 1) return;
 
-  autoPlayTimeoutRef.current = setTimeout(() => {
-    flipBookRef.current?.pageFlip()?.flipNext();
-  }, delayMs);
-};
+    autoPlayTimeoutRef.current = setTimeout(() => {
+      flipBookRef.current?.pageFlip()?.flipNext();
+    }, delayMs);
+  };
 
   const playAudioForPage = async (pageIndex) => {
     const audio = activeAudioRef?.current;
@@ -223,22 +223,22 @@ const scheduleNextFlip = (delayMs, pageIndex) => {
     }
   };
 
-const startAutoPlay = async () => {
-  setIsAudioAutoPlay?.(true);
-  setIsAutoPlay(true);
+  const startAutoPlay = async () => {
+    setIsAudioAutoPlay?.(true);
+    setIsAutoPlay(true);
 
-  const pageIndex = currentPage;
-  const result = await playAudioForPage(pageIndex);
+    const pageIndex = currentPage;
+    const result = await playAudioForPage(pageIndex);
 
-  if (pageIndex < pages.length - 1) {
-    scheduleNextFlip(result.delayMs, pageIndex);
-  } else {
-    clearAutoPlayTimer();
-    autoPlayTimeoutRef.current = setTimeout(() => {
-      stopAutoPlay();
-    }, Math.max(result?.delayMs ?? 0, 100));
-  }
-};
+    if (pageIndex < pages.length - 1) {
+      scheduleNextFlip(result.delayMs, pageIndex);
+    } else {
+      clearAutoPlayTimer();
+      autoPlayTimeoutRef.current = setTimeout(() => {
+        stopAutoPlay();
+      }, Math.max(result?.delayMs ?? 0, 100));
+    }
+  };
 
   const stopAutoPlay = () => {
     setIsAudioAutoPlay?.(false);
@@ -307,24 +307,24 @@ const startAutoPlay = async () => {
     };
   }, []);
 
-const handleFlip = async (e) => {
-  const nextPage = e?.data ?? 0;
-  setCurrentPage(nextPage);
+  const handleFlip = async (e) => {
+    const nextPage = e?.data ?? 0;
+    setCurrentPage(nextPage);
 
-  if (!isAutoPlay) return;
+    if (!isAutoPlay) return;
 
-  const result = await playAudioForPage(nextPage);
+    const result = await playAudioForPage(nextPage);
 
-  if (nextPage >= pages.length - 1) {
-    clearAutoPlayTimer();
-    autoPlayTimeoutRef.current = setTimeout(() => {
-      stopAutoPlay();
-    }, Math.max(result?.delayMs ?? 0, 100));
-    return;
-  }
+    if (nextPage >= pages.length - 1) {
+      clearAutoPlayTimer();
+      autoPlayTimeoutRef.current = setTimeout(() => {
+        stopAutoPlay();
+      }, Math.max(result?.delayMs ?? 0, 100));
+      return;
+    }
 
-  scheduleNextFlip(result.delayMs, nextPage);
-};
+    scheduleNextFlip(result.delayMs, nextPage);
+  };
 
   const handleManualPlayCurrent = async () => {
     await playAudioForPage(currentPage);
@@ -658,11 +658,12 @@ const handleFlip = async (e) => {
         <div>
           <p className="flipbook-kicker">Truyện tranh tương tác</p>
           <h3 className="flipbook-title">
-            Ba quy luật cơ bản qua câu chuyện Minh và Lan
+            Câu chuyện Xóm Chợ trong đại dịch
           </h3>
           <p className="flipbook-description">
-            Lật trang để theo dõi diễn biến câu chuyện và cảm nhận các quy luật
-            vận động, chuyển hóa và phát triển qua hình ảnh minh họa.
+            Lật từng trang để theo dõi hành trình một xóm chợ nhỏ vượt qua đại dịch
+            COVID-19, qua đó hiểu rõ hơn vai trò của nền kinh tế thị trường định hướng
+            xã hội chủ nghĩa ở Việt Nam.
           </p>
         </div>
 
@@ -739,9 +740,8 @@ const handleFlip = async (e) => {
 
         <button
           type="button"
-          className={`flipbook-btn ${
-            isAutoPlay ? "flipbook-btn-accent" : "flipbook-btn-primary"
-          }`}
+          className={`flipbook-btn ${isAutoPlay ? "flipbook-btn-accent" : "flipbook-btn-primary"
+            }`}
           onClick={() => {
             if (isAutoPlay) {
               stopAutoPlay();

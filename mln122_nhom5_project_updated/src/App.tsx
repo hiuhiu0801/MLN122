@@ -991,12 +991,12 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
         {/* Flipbook Section */}
         {/* Flipbook Section */}
         <section
-          id="flipbook"
-          className="py-32 relative z-10 bg-fixed bg-center bg-cover"
+          id="intro"
+          className="relative pt-32 pb-24 overflow-hidden z-10 bg-fixed bg-center bg-cover"
           style={{ backgroundImage: 'url("/images/Section5.png")' }}
         >
           {/* Lớp phủ mờ giúp dễ đọc chữ */}
-          <div className="absolute inset-0 bg-secondary/80 dark:bg-zinc-950/90 backdrop-blur-md -z-10" />
+          <div className="absolute inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-md -z-10" />
 
           <div className="container mx-auto px-4 md:px-6 relative z-10"></div>
           <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,rgba(37,99,235,0.10),transparent_40%)]" />
