@@ -7,73 +7,48 @@ import React, {
 } from "react";
 import HTMLFlipBook from "react-pageflip";
 
-const PAGE_RATIO = 1.5;
-const AUDIO_END_OFFSETS_MS = [
-  0, // cover_start
-  0,    // page1
-  0, // page2
-  0,    // page3
-  0, // page4
-  0,    // page5
-  0, // page6
-  0,    // page7
-  5400, // page8
-  0,    // page9
-  0, // page10
-  0,    // page11
-  0, // page12
-  0,    // cover_end = page13.mp3
-];
+const PAGE_RATIO = 0.5625;
 
 const DEFAULT_PAGES = [
   { src: "/pages/cover_start.png", alt: "Bìa truyện", type: "cover" },
-  { src: "/pages/1.png", alt: "Trang 1" },
-  { src: "/pages/2.png", alt: "Trang 2" },
-  { src: "/pages/3.png", alt: "Trang 3" },
-  { src: "/pages/4.png", alt: "Trang 4" },
-  { src: "/pages/5.png", alt: "Trang 5" },
-  { src: "/pages/6.png", alt: "Trang 6" },
-  { src: "/pages/7.png", alt: "Trang 7" },
-  { src: "/pages/8.png", alt: "Trang 8" },
-  { src: "/pages/9.png", alt: "Trang 9" },
-  { src: "/pages/10.png", alt: "Trang 10" },
-  { src: "/pages/11.png", alt: "Trang 11" },
-  { src: "/pages/12.png", alt: "Trang 12" },
+  ...Array.from({ length: 22 }, (_, i) => ({
+    src: `/pages/${i + 1}.jpg`,
+    alt: `Trang ${i + 1}`,
+  })),
   { src: "/pages/cover_end.png", alt: "Bìa sau", type: "cover" },
 ];
 
 const DEFAULT_STORY_TEXTS = [
-  "Mở đầu câu chuyện về một xóm chợ nhỏ vượt qua đại dịch COVID-19.",
-  "Giới thiệu khung cảnh xóm chợ bình yên, buôn bán nhộn nhịp hằng ngày.",
-  "Bữa cơm gia đình no đủ nhờ hàng hóa dồi dào và giá cả ổn định.",
-  "Đại dịch bất ngờ ập đến, làm đảo lộn toàn bộ nhịp sống xóm chợ.",
-  "Cung giảm, cầu tăng mạnh, thị trường bắt đầu mất cân đối.",
-  "Giá cả hàng thiết yếu leo thang khi cầu vượt quá cung.",
-  "Người dân đối mặt với khó khăn kép: mất thu nhập và bão giá.",
-  "Nhà nước xuất hiện kịp thời để can thiệp và hỗ trợ người dân.",
-  "Nguồn gạo dự trữ quốc gia được xuất cấp để bình ổn đời sống.",
-  "Chính sách giảm thuế VAT được áp dụng để hỗ trợ sản xuất và tiêu dùng.",
-  "An sinh xã hội được tăng cường qua hỗ trợ thẻ bảo hiểm y tế.",
-  "Trẻ em được chăm sóc y tế miễn phí, thể hiện tính nhân văn của chính sách.",
-  "Xóm chợ dần ổn định trở lại nhờ sự điều tiết và tinh thần sẻ chia.",
-  "Khép lại câu chuyện với bài học về kinh tế thị trường định hướng xã hội chủ nghĩa.",
+  "Bìa trước: Tấm Khiên Giữa Dòng Thị Trường.",
+  "Xóm chợ nhỏ nằm nép mình giữa những con hẻm quen thuộc, mỗi sớm mai lại rộn ràng tiếng cười nói.",
+  "Ánh nắng vàng nhẹ rơi xuống những sạp hàng, phản chiếu lên những bó rau xanh mướt và miếng thịt tươi rói.",
+  "Người mua, kẻ bán tấp nập, trao nhau không chỉ hàng hóa mà còn cả những nụ cười chân chất.",
+  "Bà Tâm, người phụ nữ đã ngoài sáu mươi, lưng hơi còng theo năm tháng, dắt tay bé Na len lỏi giữa dòng người.",
+  "Dừng lại trước sạp của cô Lan, bà Tâm mỉm cười hiền hậu xin mua nửa ký thịt với bó rau muống.",
+  "Cô Lan thoăn thoắt tay dao, vừa gói hàng vừa cười tươi, nói rằng thị trường phải cạnh tranh thì mới bán được.",
+  "Nhờ vậy mà ai cũng có cái ăn cái mặc, và cuộc sống cứ thế trôi đi bình yên qua từng ngày.",
+  "Buổi tối, trong căn nhà nhỏ, mâm cơm đơn sơ với bát canh rau và đĩa thịt cũng đủ làm bé Na cười tít mắt.",
+  "Đó là những ngày mà bàn tay vô hình của thị trường vận hành êm ái, mang lại sự đủ đầy cho mọi người.",
+  "Nhưng rồi một đêm, ánh sáng xanh từ chiếc tivi hắt lên khuôn mặt cô Lan đang đếm tiền.",
+  "Tin tức dồn dập báo rằng dịch bệnh bùng phát, phong tỏa toàn thành phố, khiến bàn tay cô khựng lại.",
+  "Sáng hôm sau, xóm chợ không còn bình yên, người người chen lấn giành giật từng bao gạo và hộp mì.",
+  "Tiếng la hét, tiếng gọi nhau vang lên hỗn loạn khi nỗi sợ hãi lan khắp khu chợ nhỏ.",
+  "Cô Lan hoảng loạn vì hàng không về được, xe kẹt hết rồi, nguồn cung bắt đầu đứt gãy nghiêm trọng.",
+  "Trong cơn xoáy của nỗi sợ, cô cầm bút đỏ gạch giá cũ rồi viết lên mức giá mới cao gấp nhiều lần.",
+  "Không chỉ riêng cô, cả thị trường như mất kiểm soát khi cung không đủ cầu và giá cả bị đẩy lên quá cao.",
+  "Ở một góc chợ, bà Tâm run run cầm nắm tiền lẻ nhàu nát, nhìn bảng giá rồi nhìn xuống bé Na, đôi mắt đỏ hoe.",
+  "Bà lặng lẽ kéo tay cháu quay đi, bởi những con người yếu thế như bà bị đẩy đến tận cùng khó khăn.",
+  "Nhưng rồi giữa lúc tưởng chừng tuyệt vọng, tiếng động cơ vang lên và một chiếc xe tải quân đội tiến vào.",
+  "Anh Hải, cán bộ phường, bước xuống cùng băng rôn đỏ rực và trấn an bà con rằng sẽ không ai bị bỏ lại phía sau.",
+  "Bà Tâm ôm chặt bao gạo vừa nhận, nước mắt rơi không ngừng, vì đó không chỉ là lương thực mà còn là hy vọng.",
+  "Những chính sách hỗ trợ tiếp tục lan tỏa, cô Lan được giảm thuế, bé Na được khám bệnh miễn phí và xóm chợ dần hồi sinh.",
+  "Bìa sau: Giông bão qua đi, người ta hiểu rằng kinh tế thị trường mang lại động lực phát triển, nhưng sự điều tiết của Nhà nước mới là tấm khiên bảo vệ con người trong lúc khó khăn nhất.",
 ];
 
 const DEFAULT_AUDIO_FILES = [
   "/audio/page0.mp3",
-  "/audio/page1.mp3",
-  "/audio/page2.mp3",
-  "/audio/page3.mp3",
-  "/audio/page4.mp3",
-  "/audio/page5.mp3",
-  "/audio/page6.mp3",
-  "/audio/page7.mp3",
-  "/audio/page8.mp3",
-  "/audio/page9.mp3",
-  "/audio/page10.mp3",
-  "/audio/page11.mp3",
-  "/audio/page12.mp3",
-  "/audio/page13.mp3",
+  ...Array.from({ length: 22 }, (_, i) => `/audio/page${i + 1}.mp3`),
+  "/audio/page23.mp3",
 ];
 
 const FlipBook = React.forwardRef((props = {}, ref) => {
@@ -88,11 +63,12 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
   const containerRef = useRef(null);
   const internalAudioRef = useRef(null);
   const autoPlayTimeoutRef = useRef(null);
+  const isStoppingRef = useRef(false);
 
   const [isAutoPlay, setIsAutoPlay] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
-  const [bookSize, setBookSize] = useState({ width: 380, height: 570 });
+  const [bookSize, setBookSize] = useState({ width: 500, height: 281 });
 
   const pages = useMemo(() => DEFAULT_PAGES, []);
   const storyTexts = useMemo(() => DEFAULT_STORY_TEXTS, []);
@@ -103,9 +79,8 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
     return DEFAULT_AUDIO_FILES;
   }, [externalAudioFiles]);
 
-  const activeAudioRef = externalAudioRef?.current
-    ? externalAudioRef
-    : internalAudioRef;
+  const activeAudioRef =
+    externalAudioRef?.current ? externalAudioRef : internalAudioRef;
 
   const clearAutoPlayTimer = () => {
     if (autoPlayTimeoutRef.current) {
@@ -120,17 +95,6 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
     audio.pause();
     audio.currentTime = 0;
     setIsPlaying?.(false);
-  };
-
-  const getFlipDelayFromAudio = (audio, pageIndex) => {
-    if (!audio || !Number.isFinite(audio.duration) || audio.duration <= 0) {
-      return 2500;
-    }
-
-    const endOffset = AUDIO_END_OFFSETS_MS[pageIndex] ?? 0;
-    const delay = Math.floor(audio.duration * 1000) - endOffset;
-
-    return Math.max(delay, 100);
   };
 
   const waitForAudioMetadata = (audio) =>
@@ -166,48 +130,142 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
       audio.addEventListener("error", handleError, { once: true });
     });
 
-  const scheduleNextFlip = (delayMs, pageIndex) => {
-    clearAutoPlayTimer();
+  const waitForAudioEnded = (audio) =>
+    new Promise((resolve) => {
+      if (!audio) {
+        resolve();
+        return;
+      }
 
-    if (pageIndex >= pages.length - 1) return;
+      const handleEnded = () => {
+        cleanup();
+        resolve();
+      };
 
-    autoPlayTimeoutRef.current = setTimeout(() => {
-      flipBookRef.current?.pageFlip()?.flipNext();
-    }, delayMs);
-  };
+      const handleError = () => {
+        cleanup();
+        resolve();
+      };
 
-  const playAudioForPage = async (pageIndex) => {
+      const cleanup = () => {
+        audio.removeEventListener("ended", handleEnded);
+        audio.removeEventListener("error", handleError);
+      };
+
+      audio.addEventListener("ended", handleEnded, { once: true });
+      audio.addEventListener("error", handleError, { once: true });
+    });
+
+  const playSingleAudio = async (pageIndex) => {
     const audio = activeAudioRef?.current;
-    const file = audioFiles?.[pageIndex];
+    const audioFile = audioFiles?.[pageIndex] || `/audio/page${pageIndex}.mp3`;
 
-    if (!audio || !file) {
-      setIsPlaying?.(false);
-      return { ok: false, delayMs: 2500 };
-    }
+    if (!audio || !audioFile) return false;
 
     try {
       audio.pause();
       audio.currentTime = 0;
-      audio.src = file;
+      audio.src = audioFile;
       audio.load();
 
       await waitForAudioMetadata(audio);
-      const delayMs = getFlipDelayFromAudio(audio, pageIndex);
-
       await audio.play();
       setIsPlaying?.(true);
-
-      return { ok: true, delayMs };
-    } catch (error) {
-      console.warn("Audio play blocked or failed:", error);
+      await waitForAudioEnded(audio);
+      return true;
+    } catch (err) {
+      console.warn("Audio play failed", err);
       setIsPlaying?.(false);
-      return { ok: false, delayMs: 2500 };
+      return false;
     }
   };
 
-  const goPrev = () => flipBookRef.current?.pageFlip()?.flipPrev();
-  const goNext = () => flipBookRef.current?.pageFlip()?.flipNext();
-  const goStart = () => flipBookRef.current?.pageFlip()?.flip(0);
+  const getSpreadPages = (pageIndex) => {
+    if (pageIndex <= 0) return [0];
+    if (pageIndex >= pages.length - 1) return [pages.length - 1];
+
+    const leftPage = pageIndex % 2 === 0 ? pageIndex - 1 : pageIndex;
+    const rightPage = leftPage + 1;
+
+    const result = [leftPage];
+    if (rightPage < pages.length - 1) {
+      result.push(rightPage);
+    }
+    return result;
+  };
+
+  const playAudioForSpread = async (pageIndex) => {
+    const spreadPages = getSpreadPages(pageIndex);
+
+    for (const p of spreadPages) {
+      if (isStoppingRef.current) break;
+      await playSingleAudio(p);
+    }
+
+    setIsPlaying?.(false);
+  };
+
+  const handleFlip = (e) => {
+    const nextPage = e.data;
+    setCurrentPage(nextPage);
+  };
+
+  const startAutoPlay = async () => {
+    if (isAutoPlay) return;
+
+    setIsAudioAutoPlay?.(true);
+    setIsAutoPlay(true);
+    isStoppingRef.current = false;
+
+    let pageIndex = currentPage;
+
+    while (!isStoppingRef.current) {
+      await playAudioForSpread(pageIndex);
+
+      if (isStoppingRef.current) break;
+      if (pageIndex >= pages.length - 1) break;
+
+      const nextPage =
+        pageIndex <= 0
+          ? 1
+          : pageIndex >= pages.length - 2
+          ? pages.length - 1
+          : pageIndex + 2;
+
+      await new Promise((resolve) => {
+        autoPlayTimeoutRef.current = setTimeout(resolve, 250);
+      });
+
+      if (isStoppingRef.current) break;
+
+      flipBookRef.current?.pageFlip()?.flip(nextPage);
+      pageIndex = nextPage;
+
+      await new Promise((resolve) => {
+        autoPlayTimeoutRef.current = setTimeout(resolve, 1050);
+      });
+    }
+
+    setIsAudioAutoPlay?.(false);
+    setIsAutoPlay(false);
+    isStoppingRef.current = false;
+    clearAutoPlayTimer();
+    setIsPlaying?.(false);
+  };
+
+  const stopAutoPlay = () => {
+    isStoppingRef.current = true;
+    setIsAudioAutoPlay?.(false);
+    setIsAutoPlay(false);
+    clearAutoPlayTimer();
+    stopAudio();
+  };
+
+  const playCurrentSpreadManually = async () => {
+    clearAutoPlayTimer();
+    isStoppingRef.current = false;
+    await playAudioForSpread(currentPage);
+  };
 
   const toggleFullscreen = async () => {
     if (!containerRef.current) return;
@@ -223,67 +281,28 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
     }
   };
 
-  const startAutoPlay = async () => {
-    setIsAudioAutoPlay?.(true);
-    setIsAutoPlay(true);
-
-    const pageIndex = currentPage;
-    const result = await playAudioForPage(pageIndex);
-
-    if (pageIndex < pages.length - 1) {
-      scheduleNextFlip(result.delayMs, pageIndex);
-    } else {
-      clearAutoPlayTimer();
-      autoPlayTimeoutRef.current = setTimeout(() => {
-        stopAutoPlay();
-      }, Math.max(result?.delayMs ?? 0, 100));
-    }
-  };
-
-  const stopAutoPlay = () => {
-    setIsAudioAutoPlay?.(false);
-    setIsAutoPlay(false);
-    clearAutoPlayTimer();
-    stopAudio();
-  };
-
-  useImperativeHandle(ref, () => ({
-    pageFlip: () => ({
-      flipNext: () => flipBookRef.current?.pageFlip()?.flipNext(),
-      flipPrev: () => flipBookRef.current?.pageFlip()?.flipPrev(),
-      flip: (page) => flipBookRef.current?.pageFlip()?.flip(page),
-    }),
-    toggleAutoPlay: async () => {
-      if (isAutoPlay) {
-        stopAutoPlay();
-      } else {
-        await startAutoPlay();
-      }
-    },
-    startAutoPlay,
-    stopAutoPlay,
-    toggleFullscreen,
-    getCurrentPage: () => currentPage,
-    getTotalPages: () => pages.length,
-    getCurrentStoryText: () => storyTexts[currentPage] || "",
-  }));
+  const goPrev = () => flipBookRef.current?.pageFlip()?.flipPrev();
+  const goNext = () => flipBookRef.current?.pageFlip()?.flipNext();
+  const goStart = () => flipBookRef.current?.pageFlip()?.flip(0);
 
   useEffect(() => {
     const updateSize = () => {
-      const viewportWidth = window.innerWidth;
-      const containerWidth = containerRef.current?.clientWidth || viewportWidth;
+      const parentWidth = containerRef.current?.clientWidth || window.innerWidth;
+      const stageWidth = Math.min(parentWidth - 80, 1100);
 
-      const availableWidth = isFullscreen
-        ? Math.min(viewportWidth - 120, 1100)
-        : Math.min(containerWidth - 32, 980);
+      let pageWidth = stageWidth / 2;
+      let pageHeight = pageWidth * PAGE_RATIO;
 
-      const pageWidth = Math.max(
-        160,
-        Math.min(availableWidth / 2, isFullscreen ? 420 : 380)
-      );
-      const pageHeight = Math.round(pageWidth * PAGE_RATIO);
+      const maxHeight = window.innerHeight * 0.6;
+      if (pageHeight > maxHeight) {
+        pageHeight = maxHeight;
+        pageWidth = pageHeight / PAGE_RATIO;
+      }
 
-      setBookSize({ width: pageWidth, height: pageHeight });
+      setBookSize({
+        width: Math.floor(pageWidth),
+        height: Math.floor(pageHeight),
+      });
     };
 
     updateSize();
@@ -307,378 +326,189 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
     };
   }, []);
 
-  const handleFlip = async (e) => {
-    const nextPage = e?.data ?? 0;
-    setCurrentPage(nextPage);
-
-    if (!isAutoPlay) return;
-
-    const result = await playAudioForPage(nextPage);
-
-    if (nextPage >= pages.length - 1) {
-      clearAutoPlayTimer();
-      autoPlayTimeoutRef.current = setTimeout(() => {
-        stopAutoPlay();
-      }, Math.max(result?.delayMs ?? 0, 100));
-      return;
-    }
-
-    scheduleNextFlip(result.delayMs, nextPage);
-  };
-
-  const handleManualPlayCurrent = async () => {
-    await playAudioForPage(currentPage);
-  };
+  useImperativeHandle(ref, () => ({
+    pageFlip: () => ({
+      flipNext: () => flipBookRef.current?.pageFlip()?.flipNext(),
+      flipPrev: () => flipBookRef.current?.pageFlip()?.flipPrev(),
+      flip: (page) => flipBookRef.current?.pageFlip()?.flip(page),
+    }),
+    startAutoPlay,
+    stopAutoPlay,
+    toggleFullscreen,
+    getCurrentPage: () => currentPage,
+    getTotalPages: () => pages.length,
+    getCurrentStoryText: () => storyTexts[currentPage] || "",
+  }));
 
   return (
     <div
       ref={containerRef}
-      className={`flipbook-shell ${isFullscreen ? "fullscreen-active" : ""}`}
+      className={`flipbook-container ${isFullscreen ? "fullscreen" : ""}`}
     >
-      {!externalAudioRef && <audio ref={internalAudioRef} preload="auto" />}
-
       <style>{`
-        .flipbook-shell {
+        .flipbook-container {
           width: 100%;
-          max-width: 1180px;
+          max-width: 1200px;
           margin: 0 auto;
-          padding: 28px;
-          border-radius: 32px;
-          border: 1px solid rgba(37, 99, 235, 0.08);
-          background:
-            linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,250,252,0.94));
-          box-shadow:
-            0 24px 80px rgba(15, 23, 42, 0.08),
-            inset 0 1px 0 rgba(255,255,255,0.7);
-          backdrop-filter: blur(10px);
-        }
-
-        .dark .flipbook-shell {
-          background:
-            linear-gradient(180deg, rgba(24,24,27,0.96), rgba(9,9,11,0.96));
-          border-color: rgba(59, 130, 246, 0.16);
-          box-shadow:
-            0 24px 80px rgba(0, 0, 0, 0.35),
-            inset 0 1px 0 rgba(255,255,255,0.04);
+          padding: 40px 20px;
+          background: #121212;
+          border-radius: 24px;
+          box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+          color: white;
         }
 
         .flipbook-header {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 20px;
-          margin-bottom: 24px;
-        }
-
-        .flipbook-kicker {
-          margin: 0 0 10px;
-          font-size: 12px;
-          font-weight: 700;
-          letter-spacing: 0.16em;
-          text-transform: uppercase;
-          color: #2563eb;
+          text-align: center;
+          margin-bottom: 30px;
         }
 
         .flipbook-title {
-          margin: 0 0 10px;
-          font-size: clamp(28px, 3.4vw, 48px);
-          line-height: 1.04;
-          font-weight: 700;
-          font-style: italic;
-          font-family: Georgia, "Times New Roman", serif;
-          color: #18181b;
-        }
-
-        .dark .flipbook-title {
-          color: #fafafa;
-        }
-
-        .flipbook-description {
-          margin: 0;
-          max-width: 760px;
-          font-size: 18px;
-          line-height: 1.75;
-          color: #52525b;
-        }
-
-        .dark .flipbook-description {
-          color: #a1a1aa;
-        }
-
-        .flipbook-meta {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          align-items: flex-end;
-          flex-shrink: 0;
-        }
-
-        .flipbook-page-chip {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          min-height: 40px;
-          padding: 0 16px;
-          border-radius: 999px;
-          font-size: 14px;
-          font-weight: 600;
-          color: #1d4ed8;
-          background: rgba(37, 99, 235, 0.08);
-          border: 1px solid rgba(37, 99, 235, 0.14);
+          font-family: 'Playfair Display', serif;
+          font-size: 2.5rem;
+          margin-bottom: 10px;
+          background: linear-gradient(to right, #fff, #aaa);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
         }
 
         .flipbook-stage {
           display: flex;
-          align-items: center;
           justify-content: center;
-          min-height: 640px;
-          margin: 0 auto 26px;
-          padding: 28px 14px;
-          border-radius: 32px;
-          background:
-            radial-gradient(circle at top, rgba(59, 130, 246, 0.08), transparent 42%),
-            linear-gradient(180deg, rgba(226, 232, 240, 0.45), rgba(241, 245, 249, 0.85));
-          border: 1px solid rgba(37, 99, 235, 0.08);
-          overflow: hidden;
-        }
-
-        .dark .flipbook-stage {
-          background:
-            radial-gradient(circle at top, rgba(59, 130, 246, 0.12), transparent 42%),
-            linear-gradient(180deg, rgba(39, 39, 42, 0.75), rgba(24, 24, 27, 0.96));
-          border-color: rgba(59, 130, 246, 0.14);
+          align-items: center;
+          perspective: 3000px;
+          padding: 20px 0;
+          min-height: 400px;
         }
 
         .dialectic-book {
-          margin: 0 auto;
+          position: relative;
+          box-shadow: 0 30px 100px rgba(0,0,0,0.8);
+        }
+
+        .dialectic-book::after {
+          content: "";
+          position: absolute;
+          left: 50%;
+          top: 0;
+          width: 10px;
+          height: 100%;
+          background: linear-gradient(to right, 
+            rgba(0,0,0,0.4) 0%, 
+            rgba(255,255,255,0.1) 50%, 
+            rgba(0,0,0,0.4) 100%);
+          transform: translateX(-50%);
+          z-index: 100;
+          pointer-events: none;
         }
 
         .page {
-          background: transparent;
+          background: #fff;
+          overflow: hidden;
         }
 
         .page-inner {
           width: 100%;
           height: 100%;
-          background: #ffffff;
-          border-radius: 18px;
-          overflow: hidden;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          box-shadow: 0 10px 40px rgba(15, 23, 42, 0.08);
-          padding: 0;
+          position: relative;
         }
 
-        .dark .page-inner {
-          background: #18181b;
+        .page-inner::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          width: 60px;
+          height: 100%;
+          z-index: 10;
+          pointer-events: none;
         }
 
-        .page-cover .page-inner {
-          background:
-            linear-gradient(180deg, rgba(254, 249, 195, 0.98), rgba(253, 230, 138, 0.98));
+        .page-left .page-inner::before {
+          right: 0;
+          background: linear-gradient(to left, rgba(0,0,0,0.4) 0%, transparent 100%);
+        }
+
+        .page-right .page-inner::before {
+          left: 0;
+          background: linear-gradient(to right, rgba(0,0,0,0.4) 0%, transparent 100%);
         }
 
         .page-image {
           width: 100%;
           height: 100%;
-          display: block;
-          object-fit: contain;
-          object-position: center;
-          background: #fff;
-        }
-
-        .page-image-page3 {
           object-fit: cover;
-          object-position: center top;
-          transform: scale(1.02);
+          display: block;
         }
 
-        .flipbook-toolbar {
+        .flipbook-footer {
           display: flex;
-          flex-wrap: wrap;
           justify-content: center;
-          gap: 12px;
-          margin-bottom: 24px;
+          gap: 15px;
+          margin-top: 30px;
+          flex-wrap: wrap;
         }
 
-        .flipbook-btn {
-          appearance: none;
-          border: none;
+        .ui-btn {
+          padding: 10px 20px;
+          border-radius: 50px;
+          border: 1px solid rgba(255,255,255,0.1);
+          background: rgba(255,255,255,0.05);
+          color: white;
           cursor: pointer;
-          min-height: 46px;
-          padding: 0 18px;
-          border-radius: 999px;
-          font-size: 15px;
-          font-weight: 700;
-          transition:
-            transform 0.18s ease,
-            box-shadow 0.18s ease,
-            background 0.18s ease,
-            color 0.18s ease,
-            border-color 0.18s ease;
+          transition: all 0.3s;
+          font-weight: 500;
+          backdrop-filter: blur(5px);
         }
 
-        .flipbook-btn:hover {
-          transform: translateY(-1px);
+        .ui-btn:hover {
+          background: #2563eb;
+          transform: translateY(-2px);
+          box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
         }
 
-        .flipbook-btn:active {
-          transform: translateY(0);
+        .ui-btn.active {
+          background: #2563eb;
+          border-color: #3b82f6;
         }
 
-        .flipbook-btn-primary {
-          color: #fff;
-          background: linear-gradient(135deg, #2563eb, #1d4ed8);
-          box-shadow: 0 10px 24px rgba(37, 99, 235, 0.28);
+        .page-indicator {
+          background: rgba(37, 99, 235, 0.2);
+          color: #60a5fa;
+          padding: 5px 15px;
+          border-radius: 20px;
+          font-size: 0.9rem;
+          margin-left: 20px;
         }
 
-        .flipbook-btn-primary:hover {
-          box-shadow: 0 14px 30px rgba(37, 99, 235, 0.34);
+        .story-card {
+          margin-top: 24px;
+          padding: 18px 20px;
+          border-radius: 18px;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.08);
+          color: rgba(255,255,255,0.9);
+          line-height: 1.7;
         }
 
-        .flipbook-btn-secondary {
-          color: #1f2937;
-          background: rgba(255,255,255,0.88);
-          border: 1px solid rgba(37, 99, 235, 0.14);
-          box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
-        }
-
-        .dark .flipbook-btn-secondary {
-          color: #fafafa;
-          background: rgba(39,39,42,0.92);
-          border-color: rgba(59, 130, 246, 0.18);
-        }
-
-        .flipbook-btn-accent {
-          color: #fff;
-          background: linear-gradient(135deg, #fb923c, #f97316);
-          box-shadow: 0 10px 24px rgba(249, 115, 22, 0.28);
-        }
-
-        .flipbook-btn-ghost {
-          color: #1d4ed8;
-          background: rgba(37, 99, 235, 0.08);
-          border: 1px solid rgba(37, 99, 235, 0.14);
-        }
-
-        .dark .flipbook-btn-ghost {
-          color: #93c5fd;
-          background: rgba(37, 99, 235, 0.12);
-        }
-
-        .flipbook-story-card {
-          padding: 20px 22px;
-          border-radius: 24px;
-          border: 1px solid rgba(37, 99, 235, 0.08);
-          background:
-            linear-gradient(180deg, rgba(255,255,255,0.9), rgba(248,250,252,0.94));
-        }
-
-        .dark .flipbook-story-card {
-          background:
-            linear-gradient(180deg, rgba(24,24,27,0.9), rgba(9,9,11,0.95));
-          border-color: rgba(59, 130, 246, 0.14);
-        }
-
-        .flipbook-story-label {
-          margin: 0 0 8px;
+        .story-card-label {
           font-size: 12px;
-          font-weight: 700;
-          letter-spacing: 0.14em;
           text-transform: uppercase;
-          color: #2563eb;
-        }
-
-        .flipbook-story-text {
-          margin: 0;
-          font-size: 17px;
-          line-height: 1.8;
-          color: #3f3f46;
-        }
-
-        .dark .flipbook-story-text {
-          color: #d4d4d8;
-        }
-
-        .fullscreen-active {
-          max-width: none;
-          width: 100%;
-          min-height: 100vh;
-          border-radius: 0;
-          padding: 24px;
-        }
-
-        @media (max-width: 900px) {
-          .flipbook-header {
-            flex-direction: column;
-            align-items: stretch;
-          }
-
-          .flipbook-meta {
-            align-items: flex-start;
-          }
-
-          .flipbook-stage {
-            min-height: 520px;
-            padding: 18px 8px;
-          }
-        }
-
-        @media (max-width: 640px) {
-          .flipbook-shell {
-            padding: 18px;
-            border-radius: 24px;
-          }
-
-          .flipbook-title {
-            font-size: 30px;
-          }
-
-          .flipbook-description {
-            font-size: 16px;
-          }
-
-          .flipbook-stage {
-            min-height: 420px;
-            border-radius: 24px;
-          }
-
-          .flipbook-btn {
-            width: 100%;
-          }
-
-          .flipbook-toolbar {
-            flex-direction: column;
-          }
+          letter-spacing: 0.12em;
+          color: #60a5fa;
+          margin-bottom: 8px;
+          font-weight: 700;
         }
       `}</style>
 
-      <div className="flipbook-header">
-        <div>
-          <p className="flipbook-kicker">Truyện tranh tương tác</p>
-          <h3 className="flipbook-title">
-            Câu chuyện Xóm Chợ trong đại dịch
-          </h3>
-          <p className="flipbook-description">
-            Lật từng trang để theo dõi hành trình một xóm chợ nhỏ vượt qua đại dịch
-            COVID-19, qua đó hiểu rõ hơn vai trò của nền kinh tế thị trường định hướng
-            xã hội chủ nghĩa ở Việt Nam.
-          </p>
-        </div>
+      {!externalAudioRef && <audio ref={internalAudioRef} preload="auto" />}
 
-        <div className="flipbook-meta">
-          <span className="flipbook-page-chip">
+      <div className="flipbook-header">
+        <h1 className="flipbook-title">Tấm Khiên Giữa Dòng Thị Trường</h1>
+        <p style={{ opacity: 0.7 }}>
+          Sử dụng nút cuộn hoặc click để lật trang
+          <span className="page-indicator">
             Trang {currentPage + 1} / {pages.length}
           </span>
-          <button
-            type="button"
-            className="flipbook-btn flipbook-btn-secondary"
-            onClick={goStart}
-          >
-            Về đầu truyện
-          </button>
-        </div>
+        </p>
       </div>
 
       <div className="flipbook-stage">
@@ -686,93 +516,63 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
           width={bookSize.width}
           height={bookSize.height}
           size="fixed"
-          minWidth={160}
-          maxWidth={420}
-          minHeight={240}
-          maxHeight={630}
-          drawShadow
-          usePortrait
-          autoSize={false}
-          mobileScrollSupport
-          maxShadowOpacity={0.35}
-          showCover
-          showPageCorners
-          flippingTime={900}
+          minWidth={200}
+          maxWidth={800}
+          minHeight={150}
+          maxHeight={600}
+          usePortrait={false}
+          startPage={0}
+          drawShadow={true}
+          flippingTime={1000}
+          onFlip={handleFlip}
           className="dialectic-book"
           ref={flipBookRef}
-          onFlip={handleFlip}
-          startPage={0}
+          showCover={true}
+          maxShadowOpacity={0.5}
         >
           {pages.map((page, index) => (
             <div
-              key={`${page.src}-${index}`}
-              className={`page ${page.type === "cover" ? "page-cover" : ""}`}
+              key={index}
+              className={`page ${index % 2 === 0 ? "page-right" : "page-left"}`}
             >
               <div className="page-inner">
-                <img
-                  src={page.src}
-                  alt={page.alt}
-                  className={`page-image ${page.className || ""}`}
-                  loading="lazy"
-                />
+                <img src={page.src} alt={page.alt} className="page-image" />
               </div>
             </div>
           ))}
         </HTMLFlipBook>
       </div>
 
-      <div className="flipbook-toolbar">
-        <button
-          type="button"
-          className="flipbook-btn flipbook-btn-secondary"
-          onClick={goPrev}
-        >
+      <div className="flipbook-footer">
+        <button className="ui-btn" onClick={goPrev}>
           ← Trang trước
         </button>
-
-        <button
-          type="button"
-          className="flipbook-btn flipbook-btn-ghost"
-          onClick={handleManualPlayCurrent}
-        >
-          Phát audio trang này
+        <button className="ui-btn" onClick={playCurrentSpreadManually}>
+          Phát Audio
         </button>
-
         <button
-          type="button"
-          className={`flipbook-btn ${isAutoPlay ? "flipbook-btn-accent" : "flipbook-btn-primary"
-            }`}
+          className={`ui-btn ${isAutoPlay ? "active" : ""}`}
           onClick={() => {
-            if (isAutoPlay) {
-              stopAutoPlay();
-            } else {
-              startAutoPlay();
-            }
+            if (isAutoPlay) stopAutoPlay();
+            else startAutoPlay();
           }}
         >
-          {isAutoPlay ? "Dừng tự động" : "Tự động lật + audio"}
+          {isAutoPlay ? "Dừng tự động" : "Tự động lật + Audio"}
         </button>
-
-        <button
-          type="button"
-          className="flipbook-btn flipbook-btn-primary"
-          onClick={goNext}
-        >
+        <button className="ui-btn" onClick={goNext}>
           Trang sau →
         </button>
-
-        <button
-          type="button"
-          className="flipbook-btn flipbook-btn-ghost"
-          onClick={toggleFullscreen}
-        >
+        <button className="ui-btn" onClick={goStart}>
+          Về trang đầu
+        </button>
+        <button className="ui-btn" onClick={toggleFullscreen}>
           {isFullscreen ? "Thoát toàn màn hình" : "Toàn màn hình"}
         </button>
       </div>
 
-      <div className="flipbook-story-card">
-        <p className="flipbook-story-label">Gợi ý nội dung trang</p>
-        <p className="flipbook-story-text">{storyTexts[currentPage] || ""}</p>
+      <div className="story-card">
+        <div className="story-card-label">Nội dung từng trang</div>
+        <div>{storyTexts[currentPage] || ""}</div>
       </div>
     </div>
   );
