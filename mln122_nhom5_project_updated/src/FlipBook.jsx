@@ -11,45 +11,47 @@ const PAGE_RATIO = 0.5625;
 
 const DEFAULT_PAGES = [
   { src: "/pages/cover_start.png", alt: "Bìa truyện", type: "cover" },
-  ...Array.from({ length: 22 }, (_, i) => ({
-    src: `/pages/${i + 1}.jpg`,
+  ...Array.from({ length: 24 }, (_, i) => ({
+    src: `/pages/${i + 1}.png`,
     alt: `Trang ${i + 1}`,
   })),
   { src: "/pages/cover_end.png", alt: "Bìa sau", type: "cover" },
 ];
 
 const DEFAULT_STORY_TEXTS = [
-  "Bìa trước: Tấm Khiên Giữa Dòng Thị Trường.",
-  "Xóm chợ nhỏ nằm nép mình giữa những con hẻm quen thuộc, mỗi sớm mai lại rộn ràng tiếng cười nói.",
-  "Ánh nắng vàng nhẹ rơi xuống những sạp hàng, phản chiếu lên những bó rau xanh mướt và miếng thịt tươi rói.",
-  "Người mua, kẻ bán tấp nập, trao nhau không chỉ hàng hóa mà còn cả những nụ cười chân chất.",
-  "Bà Tâm, người phụ nữ đã ngoài sáu mươi, lưng hơi còng theo năm tháng, dắt tay bé Na len lỏi giữa dòng người.",
-  "Dừng lại trước sạp của cô Lan, bà Tâm mỉm cười hiền hậu xin mua nửa ký thịt với bó rau muống.",
-  "Cô Lan thoăn thoắt tay dao, vừa gói hàng vừa cười tươi, nói rằng thị trường phải cạnh tranh thì mới bán được.",
-  "Nhờ vậy mà ai cũng có cái ăn cái mặc, và cuộc sống cứ thế trôi đi bình yên qua từng ngày.",
-  "Buổi tối, trong căn nhà nhỏ, mâm cơm đơn sơ với bát canh rau và đĩa thịt cũng đủ làm bé Na cười tít mắt.",
-  "Đó là những ngày mà bàn tay vô hình của thị trường vận hành êm ái, mang lại sự đủ đầy cho mọi người.",
-  "Nhưng rồi một đêm, ánh sáng xanh từ chiếc tivi hắt lên khuôn mặt cô Lan đang đếm tiền.",
-  "Tin tức dồn dập báo rằng dịch bệnh bùng phát, phong tỏa toàn thành phố, khiến bàn tay cô khựng lại.",
-  "Sáng hôm sau, xóm chợ không còn bình yên, người người chen lấn giành giật từng bao gạo và hộp mì.",
-  "Tiếng la hét, tiếng gọi nhau vang lên hỗn loạn khi nỗi sợ hãi lan khắp khu chợ nhỏ.",
-  "Cô Lan hoảng loạn vì hàng không về được, xe kẹt hết rồi, nguồn cung bắt đầu đứt gãy nghiêm trọng.",
-  "Trong cơn xoáy của nỗi sợ, cô cầm bút đỏ gạch giá cũ rồi viết lên mức giá mới cao gấp nhiều lần.",
-  "Không chỉ riêng cô, cả thị trường như mất kiểm soát khi cung không đủ cầu và giá cả bị đẩy lên quá cao.",
-  "Ở một góc chợ, bà Tâm run run cầm nắm tiền lẻ nhàu nát, nhìn bảng giá rồi nhìn xuống bé Na, đôi mắt đỏ hoe.",
-  "Bà lặng lẽ kéo tay cháu quay đi, bởi những con người yếu thế như bà bị đẩy đến tận cùng khó khăn.",
-  "Nhưng rồi giữa lúc tưởng chừng tuyệt vọng, tiếng động cơ vang lên và một chiếc xe tải quân đội tiến vào.",
-  "Anh Hải, cán bộ phường, bước xuống cùng băng rôn đỏ rực và trấn an bà con rằng sẽ không ai bị bỏ lại phía sau.",
-  "Bà Tâm ôm chặt bao gạo vừa nhận, nước mắt rơi không ngừng, vì đó không chỉ là lương thực mà còn là hy vọng.",
-  "Những chính sách hỗ trợ tiếp tục lan tỏa, cô Lan được giảm thuế, bé Na được khám bệnh miễn phí và xóm chợ dần hồi sinh.",
-  "Bìa sau: Giông bão qua đi, người ta hiểu rằng kinh tế thị trường mang lại động lực phát triển, nhưng sự điều tiết của Nhà nước mới là tấm khiên bảo vệ con người trong lúc khó khăn nhất.",
+  "Tấm Khiên Giữa Dòng Thị Trường. Chào mừng các bạn đến với câu chuyện về một xóm chợ nhỏ trong những ngày đại dịch COVID-19. Qua biến cố này, chúng ta sẽ cùng tìm hiểu về bản chất của kinh tế thị trường định hướng xã hội chủ nghĩa tại Việt Nam – một nền kinh tế năng động nhưng luôn lấy con người làm trung tâm, đảm bảo không một ai bị bỏ lại phía sau.",
+  "Buổi sáng ở xóm chợ nhỏ bắt đầu trong ánh nắng vàng dịu nhẹ. Những gian hàng dần mở cửa, tiếng người gọi nhau í ới, tiếng mặc cả rôm rả vang lên khắp nơi. Rau xanh, thịt cá được bày biện gọn gàng, tạo nên một khung cảnh quen thuộc và đầy sức sống. Nơi đây không chỉ là chỗ mua bán, mà còn là nhịp sống thường ngày của người dân.",
+  "Ở một góc chợ, cô Lan – người bán thịt quen thuộc – đang nhanh tay chuẩn bị tinh hàng cho khách. Dù công việc bận rộn, cô vẫn luôn nở nụ cười thân thiện, trò chuyện vui vẻ với mọi người. Sự chăm chỉ và nhiệt tình của cô đã trở thành một phần không thể thiếu của khu chợ nhỏ này.",
+  "Giữa dòng người tấp nập, bà Tâm dắt tay bé Na đi chợ, bà chọn từng bó rau, cân nhắc từng món đồ còn bé Na thì tò mò nhìn ngắm xung quanh. Hình ảnh 2 bà cháu giản dị nhưng ấm áp ấy khiến khung cảnh chợ thêm gần gũi và yêu thương",
+  "Những giao dịch diễn ra liên tục, người bán kẻ mua trao đổi nhanh chóng. Đồng tiền được trao tay, hàng hóa được chuyển đi, tất cả tạo nên một vòng quay nhịp nhàng của cuộc sống. Đây chính là hình ảnh rõ nét của một thị trường vận hành ổn định và tự nhiên.",
+  "Khi ngày dần tắt, mọi người trở về nhà. Trong căn bếp nhỏ, bữa cơm gia đình được dọn ra đơn giản nhưng đầy đủ. Tiếng cười nói vang lên bên mâm cơm, thể hiện một cuộc sống tuy không dư dả nhưng đủ đầy và hạnh phúc.",
+  "Một ngày, một cuộc gọi đã thay đổi tất cả. Từ giây phút đó, một hành trình mới chính thức bắt đầu.Một buổi tối, tin tức về dịch bệnh bất ngờ xuất hiện trên màn hình TV. Những con số và thông báo khẩn khiến người xem không khỏi lo lắng. Không khí trong căn nhà trở nên trầm lắng, báo hiệu một biến cố đang đến gần.",
+  "Ngay sau đó, người dân đổ xô đến chợ để mua hàng tích trữ. Không còn sự trật tự như trước, thay vào đó là cảnh chen lấn, vội vã. Ai cũng cố gắng mua thật nhiều trong nỗi lo sợ thiếu thốn.",
+  "Cô Lan đứng giữa khung cảnh hỗn loạn, tay vẫn làm việc nhưng ánh mắt đầy lo âu. Việc buôn bán không còn đơn thuần như trước, mà trở thành áp lực khi mọi thứ đều biến động.",
+  "Trên bảng giá: BÁN LẺ... 20,000đ, 55,000đ, 35,000đ, 110,000đ. Tăng giá",
+  "Bà Tâm cầm những đồng tiền ít ỏi trong tay, nhìn vào các mặt hàng mà không biết nên chọn gì. Giá cả tăng cao khiến bà không thể mua đủ những thứ cần thiết.",
+  "Cuối cùng, hai bà cháu đành lặng lẽ rời khỏi chợ. Bóng lưng họ kéo dài trên con đường vắng, mang theo sự buồn bã và nỗi lo về những ngày sắp tới.",
+  "Giữa lúc khó khăn nhất, những chiếc xe quân đội chở đầy hàng hóa tiến vào khu dân cư. Sự xuất hiện ấy mang theo hy vọng và sự hỗ trợ kịp thời cho người dân.",
+  "Các cán bộ dùng loa thông báo những chính sách hỗ trợ từ Nhà nước. Giọng nói vang lên rõ ràng, giúp người dân hiểu rằng họ không hề đơn độc trong lúc khó khăn.",
+  "Những bao gạo, nhu yếu phẩm được trao tận tay từng người dân. Khoảnh khắc ấy không chỉ là sự giúp đỡ về vật chất mà còn là sự sẻ chia đầy nhân văn.",
+  " Bà Tâm ôm chặt túi gạo trong tay, nước mắt lăn dài trên má. Đó là giọt nước mắt của sự biết ơn và nhẹ nhõm khi được giúp đỡ đúng lúc.",
+  "Cô Lan nhận được thông tin về các chính sách hỗ trợ, gương mặt dần giãn ra sau những ngày lo lắng. Việc buôn bán có cơ hội ổn định trở lại.",
+  "Giá cả trên bảng được điều chỉnh xuống mức hợp lý hơn. Không khí chợ dần trở nên ổn định, người dân bớt đi phần nào áp lực.",
+  "Tại trạm y tế, các bác sĩ tận tình chăm sóc bệnh nhân. Những đứa trẻ và và người già được quan tâm chu đáo, tạo cảm giác an ân cho cả cộng đồng.",
+  " Những tấm thẻ bảo hiểm được trao đến tay người dân. Đây không chỉ là hỗ trợ trước mắt mà còn là sự đảm bảo dài cho sức khỏe của họ.",
+  "Sau những ngày khó khăn, xóm chợ dần hoạt động trở lại. Tiếng cười nói, mua bán nhộn nhịp lại vang lên như trước.",
+  "Bé Na nhận được viên kẹo từ người bán hàng, nụ cười hồn nhiên nở trên môi. Đó là dấu hiệu của sự bình yên đã quay trở lại.",
+  "Người dân trong chợ cùng nhau trò chuyện, chia sẻ niềm vui. Sự gắn kết cộng đồng trở nên mạnh mẽ hơn sau biến cố.",
+  "Từ trên cao nhìn xuống, xóm chợ nhỏ nằm giữa thành phố hiện đại, đón ánh bình minh mới. Một chặng đường khó khăn đã qua, mở ra tương lai tươi sáng hơn cho tất cả mọi người."
 ];
 
 const DEFAULT_AUDIO_FILES = [
   "/audio/page0.mp3",
-  ...Array.from({ length: 22 }, (_, i) => `/audio/page${i + 1}.mp3`),
-  "/audio/page23.mp3",
+  ...Array.from({ length: 24 }, (_, i) => `/audio/page${i + 1}.mp3`),
+  "/audio/page25.mp3",
 ];
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const FlipBook = React.forwardRef((props = {}, ref) => {
   const {
@@ -62,8 +64,12 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
   const flipBookRef = useRef(null);
   const containerRef = useRef(null);
   const internalAudioRef = useRef(null);
+
   const autoPlayTimeoutRef = useRef(null);
   const isStoppingRef = useRef(false);
+  const playbackSessionRef = useRef(0);
+  const pendingAutoFlipRef = useRef(false);
+  const restartFromPageRef = useRef(null);
 
   const [isAutoPlay, setIsAutoPlay] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -89,78 +95,134 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
     }
   };
 
+  const isSessionActive = (sessionId) =>
+    playbackSessionRef.current === sessionId && !isStoppingRef.current;
+
   const stopAudio = () => {
     const audio = activeAudioRef?.current;
     if (!audio) return;
+
     audio.pause();
     audio.currentTime = 0;
+    audio.removeAttribute("src");
+    audio.load();
     setIsPlaying?.(false);
   };
 
-  const waitForAudioMetadata = (audio) =>
+  const cancelCurrentPlayback = () => {
+    playbackSessionRef.current += 1;
+    clearAutoPlayTimer();
+    stopAudio();
+  };
+
+  const createPlaybackSession = () => {
+    playbackSessionRef.current += 1;
+    return playbackSessionRef.current;
+  };
+
+  const waitForAudioMetadata = (audio, sessionId) =>
     new Promise((resolve) => {
       if (!audio) {
-        resolve();
+        resolve(false);
         return;
       }
 
       if (Number.isFinite(audio.duration) && audio.duration > 0) {
-        resolve();
+        resolve(true);
         return;
       }
 
-      const handleLoaded = () => {
-        cleanup();
-        resolve();
-      };
-
-      const handleError = () => {
-        cleanup();
-        resolve();
-      };
+      let settled = false;
 
       const cleanup = () => {
         audio.removeEventListener("loadedmetadata", handleLoaded);
         audio.removeEventListener("canplaythrough", handleLoaded);
         audio.removeEventListener("error", handleError);
+        clearInterval(intervalId);
       };
+
+      const finish = (value) => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        resolve(value);
+      };
+
+      const handleLoaded = () => finish(true);
+      const handleError = () => finish(false);
+
+      const intervalId = setInterval(() => {
+        if (!isSessionActive(sessionId)) finish(false);
+      }, 100);
 
       audio.addEventListener("loadedmetadata", handleLoaded, { once: true });
       audio.addEventListener("canplaythrough", handleLoaded, { once: true });
       audio.addEventListener("error", handleError, { once: true });
     });
 
-  const waitForAudioEnded = (audio) =>
+  const waitForAudioEnded = (audio, sessionId) =>
     new Promise((resolve) => {
       if (!audio) {
-        resolve();
+        resolve("cancelled");
         return;
       }
 
-      const handleEnded = () => {
-        cleanup();
-        resolve();
-      };
-
-      const handleError = () => {
-        cleanup();
-        resolve();
-      };
+      let settled = false;
 
       const cleanup = () => {
         audio.removeEventListener("ended", handleEnded);
         audio.removeEventListener("error", handleError);
+        clearInterval(intervalId);
       };
+
+      const finish = (value) => {
+        if (settled) return;
+        settled = true;
+        cleanup();
+        resolve(value);
+      };
+
+      const handleEnded = () => finish("ended");
+      const handleError = () => finish("error");
+
+      const intervalId = setInterval(() => {
+        if (!isSessionActive(sessionId)) finish("cancelled");
+      }, 100);
 
       audio.addEventListener("ended", handleEnded, { once: true });
       audio.addEventListener("error", handleError, { once: true });
     });
 
-  const playSingleAudio = async (pageIndex) => {
+  const getVisibleSpreadPages = (pageIndex) => {
+    const lastPage = pages.length - 1;
+
+    if (pageIndex <= 0) return [0];
+    if (pageIndex >= lastPage) return [lastPage];
+
+    const rightPage = Math.min(pageIndex + 1, lastPage);
+    return [pageIndex, rightPage];
+  };
+
+  const getPageIndicatorText = (pageIndex) => {
+    const visiblePages = getVisibleSpreadPages(pageIndex).map((p) => p + 1);
+    return visiblePages.length === 1
+      ? `Trang ${visiblePages[0]} / ${pages.length}`
+      : `Trang ${visiblePages.join(", ")} / ${pages.length}`;
+  };
+
+  const getStoryTextForCurrentView = () => {
+    const visiblePages = getVisibleSpreadPages(currentPage);
+    return visiblePages
+      .map((pageIndex) => storyTexts[pageIndex])
+      .filter(Boolean)
+      .join(" ");
+  };
+
+  const playSingleAudio = async (pageIndex, sessionId) => {
     const audio = activeAudioRef?.current;
     const audioFile = audioFiles?.[pageIndex] || `/audio/page${pageIndex}.mp3`;
 
-    if (!audio || !audioFile) return false;
+    if (!audio || !audioFile || !isSessionActive(sessionId)) return false;
 
     try {
       audio.pause();
@@ -168,46 +230,77 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
       audio.src = audioFile;
       audio.load();
 
-      await waitForAudioMetadata(audio);
+      const hasMetadata = await waitForAudioMetadata(audio, sessionId);
+      if (!hasMetadata || !isSessionActive(sessionId)) return false;
+
       await audio.play();
+      if (!isSessionActive(sessionId)) return false;
+
       setIsPlaying?.(true);
-      await waitForAudioEnded(audio);
-      return true;
-    } catch (err) {
-      console.warn("Audio play failed", err);
+
+      const result = await waitForAudioEnded(audio, sessionId);
+      return result === "ended";
+    } catch (error) {
+      console.warn("Audio play failed:", error);
       setIsPlaying?.(false);
       return false;
     }
   };
 
-  const getSpreadPages = (pageIndex) => {
-    if (pageIndex <= 0) return [0];
-    if (pageIndex >= pages.length - 1) return [pages.length - 1];
-
-    const leftPage = pageIndex % 2 === 0 ? pageIndex - 1 : pageIndex;
-    const rightPage = leftPage + 1;
-
-    const result = [leftPage];
-    if (rightPage < pages.length - 1) {
-      result.push(rightPage);
-    }
-    return result;
-  };
-
-  const playAudioForSpread = async (pageIndex) => {
-    const spreadPages = getSpreadPages(pageIndex);
+  const playAudioForSpread = async (pageIndex, sessionId) => {
+    const spreadPages = getVisibleSpreadPages(pageIndex);
 
     for (const p of spreadPages) {
-      if (isStoppingRef.current) break;
-      await playSingleAudio(p);
+      if (!isSessionActive(sessionId)) return false;
+
+      const played = await playSingleAudio(p, sessionId);
+      if (!played) return false;
     }
 
-    setIsPlaying?.(false);
+    if (isSessionActive(sessionId)) {
+      setIsPlaying?.(false);
+    }
+
+    return true;
+  };
+
+  const playSpreadOnce = async (pageIndex) => {
+    cancelCurrentPlayback();
+    isStoppingRef.current = false;
+
+    const sessionId = createPlaybackSession();
+    await playAudioForSpread(pageIndex, sessionId);
+
+    if (isSessionActive(sessionId)) {
+      setIsPlaying?.(false);
+    }
+  };
+
+  const getNextPageForAutoPlay = (pageIndex) => {
+    const lastPage = pages.length - 1;
+    if (pageIndex <= 0) return 1;
+    if (pageIndex >= lastPage) return lastPage;
+    return Math.min(pageIndex + 2, lastPage);
   };
 
   const handleFlip = (e) => {
     const nextPage = e.data;
+    const audio = activeAudioRef?.current;
+    const wasPlaying = Boolean(audio && !audio.paused);
+    const wasInternalAutoFlip = pendingAutoFlipRef.current;
+
+    pendingAutoFlipRef.current = false;
     setCurrentPage(nextPage);
+
+    if (wasInternalAutoFlip) return;
+    if (!wasPlaying) return;
+
+    restartFromPageRef.current = nextPage;
+    cancelCurrentPlayback();
+
+    if (!isAutoPlay) {
+      void playSpreadOnce(nextPage);
+    }
   };
 
   const startAutoPlay = async () => {
@@ -216,55 +309,51 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
     setIsAudioAutoPlay?.(true);
     setIsAutoPlay(true);
     isStoppingRef.current = false;
+    restartFromPageRef.current = null;
 
     let pageIndex = currentPage;
 
     while (!isStoppingRef.current) {
-      await playAudioForSpread(pageIndex);
+      const sessionId = createPlaybackSession();
+      await playAudioForSpread(pageIndex, sessionId);
 
       if (isStoppingRef.current) break;
+
+      if (restartFromPageRef.current !== null) {
+        pageIndex = restartFromPageRef.current;
+        restartFromPageRef.current = null;
+        continue;
+      }
+
       if (pageIndex >= pages.length - 1) break;
 
-      const nextPage =
-        pageIndex <= 0
-          ? 1
-          : pageIndex >= pages.length - 2
-          ? pages.length - 1
-          : pageIndex + 2;
+      const nextPage = getNextPageForAutoPlay(pageIndex);
 
-      await new Promise((resolve) => {
-        autoPlayTimeoutRef.current = setTimeout(resolve, 250);
-      });
-
+      await wait(200);
       if (isStoppingRef.current) break;
 
+      pendingAutoFlipRef.current = true;
       flipBookRef.current?.pageFlip()?.flip(nextPage);
       pageIndex = nextPage;
 
-      await new Promise((resolve) => {
-        autoPlayTimeoutRef.current = setTimeout(resolve, 1050);
-      });
+      await wait(1050);
+      if (isStoppingRef.current) break;
     }
 
     setIsAudioAutoPlay?.(false);
     setIsAutoPlay(false);
     isStoppingRef.current = false;
+    restartFromPageRef.current = null;
     clearAutoPlayTimer();
     setIsPlaying?.(false);
   };
 
   const stopAutoPlay = () => {
     isStoppingRef.current = true;
+    restartFromPageRef.current = null;
     setIsAudioAutoPlay?.(false);
     setIsAutoPlay(false);
-    clearAutoPlayTimer();
-    stopAudio();
-  };
-
-  const playCurrentSpreadManually = async () => {
-    clearAutoPlayTimer();
-    isStoppingRef.current = false;
-    await playAudioForSpread(currentPage);
+    cancelCurrentPlayback();
   };
 
   const toggleFullscreen = async () => {
@@ -281,9 +370,20 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
     }
   };
 
-  const goPrev = () => flipBookRef.current?.pageFlip()?.flipPrev();
-  const goNext = () => flipBookRef.current?.pageFlip()?.flipNext();
-  const goStart = () => flipBookRef.current?.pageFlip()?.flip(0);
+  const goPrev = () => {
+    cancelCurrentPlayback();
+    flipBookRef.current?.pageFlip()?.flipPrev();
+  };
+
+  const goNext = () => {
+    cancelCurrentPlayback();
+    flipBookRef.current?.pageFlip()?.flipNext();
+  };
+
+  const goStart = () => {
+    cancelCurrentPlayback();
+    flipBookRef.current?.pageFlip()?.flip(0);
+  };
 
   useEffect(() => {
     const updateSize = () => {
@@ -321,8 +421,7 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
 
   useEffect(() => {
     return () => {
-      clearAutoPlayTimer();
-      stopAudio();
+      cancelCurrentPlayback();
     };
   }, []);
 
@@ -337,7 +436,7 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
     toggleFullscreen,
     getCurrentPage: () => currentPage,
     getTotalPages: () => pages.length,
-    getCurrentStoryText: () => storyTexts[currentPage] || "",
+    getCurrentStoryText: () => getStoryTextForCurrentView(),
   }));
 
   return (
@@ -392,10 +491,12 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
           top: 0;
           width: 10px;
           height: 100%;
-          background: linear-gradient(to right, 
-            rgba(0,0,0,0.4) 0%, 
-            rgba(255,255,255,0.1) 50%, 
-            rgba(0,0,0,0.4) 100%);
+          background: linear-gradient(
+            to right,
+            rgba(0,0,0,0.4) 0%,
+            rgba(255,255,255,0.1) 50%,
+            rgba(0,0,0,0.4) 100%
+          );
           transform: translateX(-50%);
           z-index: 100;
           pointer-events: none;
@@ -477,6 +578,7 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
           border-radius: 20px;
           font-size: 0.9rem;
           margin-left: 20px;
+          display: inline-block;
         }
 
         .story-card {
@@ -497,6 +599,36 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
           margin-bottom: 8px;
           font-weight: 700;
         }
+
+        @media (max-width: 768px) {
+          .flipbook-container {
+            padding: 24px 12px;
+            border-radius: 18px;
+          }
+
+          .flipbook-title {
+            font-size: 1.8rem;
+          }
+
+          .flipbook-stage {
+            min-height: 260px;
+            padding: 12px 0;
+          }
+
+          .page-indicator {
+            margin-left: 0;
+            margin-top: 10px;
+          }
+
+          .flipbook-footer {
+            gap: 10px;
+          }
+
+          .ui-btn {
+            width: calc(50% - 8px);
+            min-width: 140px;
+          }
+        }
       `}</style>
 
       {!externalAudioRef && <audio ref={internalAudioRef} preload="auto" />}
@@ -505,10 +637,8 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
         <h1 className="flipbook-title">Tấm Khiên Giữa Dòng Thị Trường</h1>
         <p style={{ opacity: 0.7 }}>
           Sử dụng nút cuộn hoặc click để lật trang
-          <span className="page-indicator">
-            Trang {currentPage + 1} / {pages.length}
-          </span>
         </p>
+        <span className="page-indicator">{getPageIndicatorText(currentPage)}</span>
       </div>
 
       <div className="flipbook-stage">
@@ -547,14 +677,17 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
         <button className="ui-btn" onClick={goPrev}>
           ← Trang trước
         </button>
-        <button className="ui-btn" onClick={playCurrentSpreadManually}>
+        <button className="ui-btn" onClick={() => void playSpreadOnce(currentPage)}>
           Phát Audio
         </button>
         <button
           className={`ui-btn ${isAutoPlay ? "active" : ""}`}
           onClick={() => {
-            if (isAutoPlay) stopAutoPlay();
-            else startAutoPlay();
+            if (isAutoPlay) {
+              stopAutoPlay();
+            } else {
+              void startAutoPlay();
+            }
           }}
         >
           {isAutoPlay ? "Dừng tự động" : "Tự động lật + Audio"}
@@ -572,7 +705,7 @@ const FlipBook = React.forwardRef((props = {}, ref) => {
 
       <div className="story-card">
         <div className="story-card-label">Nội dung từng trang</div>
-        <div>{storyTexts[currentPage] || ""}</div>
+        <div>{getStoryTextForCurrentView()}</div>
       </div>
     </div>
   );
