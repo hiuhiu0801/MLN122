@@ -50,7 +50,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { getChatResponse, generateImage } from "./lib/gemini";
+import { getChatResponse } from "./lib/gemini";
 import { auth, googleProvider } from "./lib/firebase";
 import {
   createUserWithEmailAndPassword,
@@ -63,6 +63,11 @@ import {
   User as FirebaseUser,
 } from "firebase/auth";
 import FlipBook from "./FlipBook";
+
+// Import hình ảnh trực tiếp từ thư mục lib
+import img1 from "./lib/1.jpg";
+import img2 from "./lib/2.jpg";
+import img3 from "./lib/3.jpg";
 
 interface Message {
   role: "user" | "model";
@@ -85,7 +90,6 @@ interface StudyTopic {
   highlights: string[];
   content: string;
   example: string;
-  imagePrompt: string;
   imageUrl?: string;
 }
 
@@ -168,7 +172,6 @@ export default function App() {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isGeneratingImage, setIsGeneratingImage] = useState<Record<string, boolean>>({});
   const [isProfileDialogOpen, setIsProfileDialogOpen] = useState(false);
   const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
   const [theme, setTheme] = useState<"light" | "dark">(() => {
@@ -440,8 +443,7 @@ Kinh tế thị trường định hướng xã hội chủ nghĩa ở Việt Nam
       `,
       example:
         "Trong thực tiễn, nền kinh tế vẫn có nhiều chủ thể cạnh tranh, nhiều hình thức sở hữu, nhưng Nhà nước định hướng phát triển bằng pháp luật, chiến lược, chính sách và an sinh xã hội.",
-      imagePrompt:
-        "Educational illustration about Vietnam socialist-oriented market economy, balance between market dynamics, state regulation, social welfare, academic infographic style, bright warm colors.",
+      imageUrl: img1,
     },
     {
       id: "topic-2",
@@ -469,8 +471,7 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
       `,
       example:
         "Khi kinh tế vận hành theo cơ chế thị trường, doanh nghiệp có động lực cạnh tranh và đổi mới; đồng thời Nhà nước định hướng để bảo đảm ổn định kinh tế vĩ mô và mục tiêu xã hội.",
-      imagePrompt:
-        "Academic visual showing objective necessity of socialist oriented market economy in Vietnam, growth, people welfare, market and state balance, infographic style.",
+      imageUrl: img2,
     },
     {
       id: "topic-3",
@@ -496,8 +497,7 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
       `,
       example:
         "Trong thực tiễn Việt Nam, cùng với doanh nghiệp nhà nước còn có doanh nghiệp tư nhân, hợp tác xã, doanh nghiệp có vốn đầu tư nước ngoài; Nhà nước định hướng bằng chính sách, pháp luật và các chương trình an sinh.",
-      imagePrompt:
-        "Clean academic infographic summarizing characteristics of Vietnam socialist oriented market economy: goals, ownership, management, distribution, social justice, bright educational design.",
+      imageUrl: img3,
     },
   ]);
 
@@ -576,18 +576,6 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleGenerateImage = async (topicId: string) => {
-    const topic = topics.find((item) => item.id === topicId);
-    if (!topic || isGeneratingImage[topicId]) return;
-
-    setIsGeneratingImage((prev) => ({ ...prev, [topicId]: true }));
-    const url = await generateImage(topic.imagePrompt);
-    if (url) {
-      setTopics((prev) => prev.map((item) => (item.id === topicId ? { ...item, imageUrl: url } : item)));
-    }
-    setIsGeneratingImage((prev) => ({ ...prev, [topicId]: false }));
   };
 
   return (
@@ -819,7 +807,7 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
                     animate={{ opacity: 1, y: 0 }}
                     className="grid md:grid-cols-12 bg-white dark:bg-zinc-950 rounded-[2.5rem] shadow-2xl shadow-primary/5 overflow-hidden border border-primary/5"
                   >
-                    {/* Cột trái: Tiêu đề & Ảnh AI */}
+                    {/* Cột trái: Tiêu đề & Ảnh */}
                     <div className="md:col-span-5 bg-primary/[0.02] p-10 flex flex-col border-b md:border-b-0 md:border-r border-primary/5">
                       <div className="w-20 h-20 rounded-3xl bg-white dark:bg-zinc-900 flex items-center justify-center shadow-xl shadow-primary/5 mb-8 transform -rotate-3">
                         {topic.icon}
@@ -828,31 +816,13 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
                       <p className="text-base text-accent font-medium italic mb-10 opacity-80">{topic.subtitle}</p>
 
                       <div className="w-full mt-auto">
-                        <div className="aspect-[4/3] w-full rounded-3xl bg-secondary/50 border border-dashed border-primary/20 flex flex-col items-center justify-center overflow-hidden relative group shadow-inner">
-                          {topic.imageUrl ? (
-                            <>
-                              <img src={topic.imageUrl} alt={topic.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" referrerPolicy="no-referrer" />
-                              <div className="absolute inset-0 bg-primary/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center backdrop-blur-[2px]">
-                                <Button variant="secondary" className="rounded-full px-6 shadow-xl" onClick={() => handleGenerateImage(topic.id)} disabled={isGeneratingImage[topic.id]}>
-                                  {isGeneratingImage[topic.id] ? "Đang tạo..." : "Tạo lại ảnh AI"}
-                                </Button>
-                              </div>
-                            </>
-                          ) : (
-                            <div className="p-8 flex flex-col items-center text-center">
-                              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                                <Zap className="w-6 h-6 text-primary/40" />
-                              </div>
-                              <p className="text-xs text-muted-foreground mb-6 font-medium">Chưa có hình ảnh minh họa AI</p>
-                              <Button variant="outline" className="rounded-full border-primary/20 hover:bg-primary/5" onClick={() => handleGenerateImage(topic.id)} disabled={isGeneratingImage[topic.id]}>
-                                {isGeneratingImage[topic.id] ? "Đang tạo..." : "Tạo ảnh minh họa AI"}
-                              </Button>
-                            </div>
-                          )}
+                        <div className=" w-full rounded-3xl bg-secondary/50 border border-primary/20 flex flex-col items-center justify-center overflow-hidden relative group shadow-inner">
+                          <img 
+                            src={topic.imageUrl} 
+                            alt={topic.title} 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                          />
                         </div>
-                        <p className="text-[10px] text-muted-foreground mt-4 italic text-center opacity-60">
-                          * Hình ảnh được tạo ngẫu nhiên bởi AI dựa trên nội dung bài học
-                        </p>
                       </div>
                     </div>
 
@@ -1152,7 +1122,7 @@ Việc lựa chọn mô hình này là **kết quả của quá trình nhận th
         )}
       </AnimatePresence>
 
-      {/* Dialogs Profiling & Auth (Giữ nguyên) */}
+      {/* Dialogs Profiling & Auth */}
       <Dialog open={isProfileDialogOpen} onOpenChange={setIsProfileDialogOpen}>
         <DialogContent className="sm:max-w-[425px] rounded-[2rem]">
           <DialogHeader>
