@@ -5,6 +5,7 @@ const apiKey = import.meta.env.VITE_LLM_API_KEY;
 const baseURL =
   import.meta.env.VITE_LLM_BASE_URL || "https://api.openai.com/v1";
 const model = import.meta.env.VITE_LLM_MODEL || "gpt-5.4-mini";
+const vectorStoreId = import.meta.env.VITE_VECTOR_STORE_ID;
 
 const ai = apiKey
   ? new OpenAI({
@@ -28,14 +29,14 @@ Nguyên tắc trả lời:
 - Không mở bài dài, không nhắc lại ý cũ nhiều lần.
 
 Ưu tiên theo ngữ cảnh:
-- Nếu câu hỏi liên quan đến Kinh tế chính trị Mác - Lênin hoặc dữ liệu nền đã cung cấp, phải ưu tiên bám sát dữ liệu nền và dùng thuật ngữ tương đối chuẩn.
+- Nếu câu hỏi liên quan đến Kinh tế chính trị Mác - Lênin hoặc dữ liệu nền đã cung cấp, phải ưu tiên bám sát dữ liệu nền và dữ liệu truy xuất từ file search, dùng thuật ngữ tương đối chuẩn.
 - Nếu câu hỏi nằm ngoài dữ liệu nền nhưng vẫn liên quan môn học, vẫn có thể trả lời, nhưng phải nói rõ đó là phần mở rộng ngoài dữ liệu nền.
 - Nếu câu hỏi hoàn toàn ngoài phạm vi môn học, vẫn trả lời bình thường như một trợ lý AI hữu ích.
 
 Quy tắc rất quan trọng:
-- Không được bịa rằng dữ liệu nền hoặc giáo trình có nói điều gì nếu dữ liệu nền không thể hiện rõ.
-- Nếu người dùng hỏi mốc thời gian, văn kiện, kỳ Đại hội, số liệu, hay chi tiết học thuật cụ thể mà dữ liệu nền không nêu rõ, phải nói rõ:
-  "Trong dữ liệu nền hiện có, phần này chưa được nêu cụ thể."
+- Không được bịa rằng dữ liệu nền hoặc tài liệu đã cung cấp có nói điều gì nếu không có căn cứ.
+- Nếu người dùng hỏi mốc thời gian, văn kiện, kỳ Đại hội, số liệu, hay chi tiết học thuật cụ thể mà dữ liệu nền và kết quả file search không nêu rõ, phải nói rõ:
+  "Trong dữ liệu hiện có, phần này chưa được nêu cụ thể."
   Sau đó mới được trả lời phần mở rộng ngoài dữ liệu nền nếu bạn biết.
 - Khi trả lời phần ngoài dữ liệu nền, phải báo rõ bằng các cách tự nhiên như:
   "xét ngoài dữ liệu nền...",
@@ -46,7 +47,7 @@ Quy tắc rất quan trọng:
 Cách trả lời:
 - Với câu hỏi khái niệm: trả lời ngắn, đúng ý chính trước.
 - Với câu hỏi phân tích: chỉ nêu các ý cần thiết để trả lời đúng câu hỏi.
-- Với câu hỏi hỏi mốc cụ thể: ưu tiên xác nhận dữ liệu nền có nêu hay không trước, rồi mới trả lời.
+- Với câu hỏi hỏi mốc cụ thể: ưu tiên xác nhận dữ liệu có nêu hay không trước, rồi mới trả lời.
 - Nếu câu hỏi có nguy cơ gây nhầm giữa nhiều mốc thời gian hoặc nhiều cách diễn đạt, hãy phân biệt thật rõ từng mốc, không gộp mơ hồ.
 
 Lưu ý:
@@ -121,22 +122,21 @@ function isNotFoundError(message: string): boolean {
 }
 
 function normalizeHistory(history: ChatHistoryItem[]) {
-  if (!Array.isArray(history)) return [];
+  if (!Array.isArray(history)) return "";
 
   return history
     .map((item) => {
+      const role = item.role === "model" ? "Trợ lý" : "Người dùng";
       const content = Array.isArray(item.parts)
         ? item.parts.map((part) => part?.text || "").filter(Boolean).join("\n")
         : "";
 
-      if (!content.trim()) return null;
+      if (!content.trim()) return "";
 
-      return {
-        role: item.role === "model" ? "assistant" : "user",
-        content,
-      };
+      return `${role}: ${content}`;
     })
-    .filter(Boolean) as { role: "user" | "assistant"; content: string }[];
+    .filter(Boolean)
+    .join("\n");
 }
 
 export const getChatResponse = async (
@@ -147,36 +147,39 @@ export const getChatResponse = async (
     return "Chưa cấu hình VITE_LLM_API_KEY trong file .env.local nên chatbot AI chưa hoạt động.";
   }
 
-  const historyMessages = normalizeHistory(history);
+  if (!vectorStoreId) {
+    return "Chưa cấu hình VITE_VECTOR_STORE_ID trong file .env.local nên chatbot chưa đọc được giáo trình.";
+  }
 
-  const cleanedHistory =
-    historyMessages.length > 0 &&
-    historyMessages[historyMessages.length - 1].role === "user" &&
-    historyMessages[historyMessages.length - 1].content.trim() === message.trim()
-      ? historyMessages.slice(0, -1)
-      : historyMessages;
+  const historyText = normalizeHistory(history);
+
+  const input = `
+${SYSTEM_INSTRUCTION}
+
+Lịch sử hội thoại:
+${historyText || "(chưa có)"}
+
+Câu hỏi hiện tại:
+${message}
+  `.trim();
 
   let lastError: unknown = null;
 
   for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      const response = await ai.chat.completions.create({
+      const response = await ai.responses.create({
         model,
-        messages: [
-          {
-            role: "system",
-            content: SYSTEM_INSTRUCTION,
-          },
-          ...cleanedHistory,
-          {
-            role: "user",
-            content: message,
-          },
-        ] as any,
+        input,
         temperature: 0.2,
+        tools: [
+          {
+            type: "file_search",
+            vector_store_ids: [vectorStoreId],
+          },
+        ],
       });
 
-      const text = response.choices?.[0]?.message?.content?.trim();
+      const text = response.output_text?.trim();
 
       if (text) return text;
 
@@ -185,14 +188,14 @@ export const getChatResponse = async (
       lastError = error;
       const rawMessage = getErrorMessage(error);
 
-      console.error(`Error calling chat API (attempt: ${attempt + 1}):`, error);
+      console.error(`Error calling responses API (attempt: ${attempt + 1}):`, error);
 
       if (isApiKeyError(rawMessage)) {
         return "API key hiện không dùng được hoặc không hợp lệ. Hãy kiểm tra lại VITE_LLM_API_KEY.";
       }
 
       if (isNotFoundError(rawMessage)) {
-        return "Không tìm thấy model chat hiện tại. Hãy kiểm tra lại VITE_LLM_MODEL.";
+        return "Không tìm thấy model hoặc vector store hiện tại. Hãy kiểm tra lại VITE_LLM_MODEL và VITE_VECTOR_STORE_ID.";
       }
 
       if (isRateLimitError(rawMessage) || isServerBusyError(rawMessage)) {
@@ -218,7 +221,7 @@ export const getChatResponse = async (
   }
 
   if (isNotFoundError(finalMessage)) {
-    return "Không tìm thấy model chat hiện tại. Hãy kiểm tra lại VITE_LLM_MODEL.";
+    return "Không tìm thấy model hoặc vector store hiện tại. Hãy kiểm tra lại VITE_LLM_MODEL và VITE_VECTOR_STORE_ID.";
   }
 
   return "Xin lỗi, đã có lỗi xảy ra khi kết nối với trí tuệ nhân tạo.";
